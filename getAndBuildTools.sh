@@ -124,6 +124,7 @@ build() {
             --enable-version-specific-runtime-libs \
             --enable-threads=rtems \
             --enable-languages=c,c++ 
+        ${MAKE} -w all
         ${MAKE} -w install
         cd ..
     done
