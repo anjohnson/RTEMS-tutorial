@@ -273,10 +273,6 @@ building the cross-compiler and libraries.
 \begin{verbatim}
 make -w all install
 \end{verbatim}
-On Mac OS X (Darwin) you'll have to use the command:
-\begin{verbatim}
-make -w "CC=cc -no-cpp-precomp" all install
-\end{verbatim}
 
 \item Return to the directory containing the tool and library sources.
 \begin{verbatim}
@@ -592,12 +588,12 @@ be used, and
 {\it bspname} is the name of the RTEMS target architecture and
 board support package used back in section~\ref{RTEMS_BSP_CONFIG}.
 
-Some extensions still use the old configuration procedure so it's a good idea
-to make the same change in
-\begin{verbatim}
-config/CONFIG_SITE
-\end{verbatim}
-as well.
+If you build EPICS base on multiple host architectures and want to build
+RTEMS target support on only one of those host architectures the target
+specification can instead be performed in 
+\begin{alltt}
+configure/os/CONFIG_SITE.<{\it{hostArch}}>.Common/CONFIG_SITE
+\end{alltt}
 
 
 \section{Build EPICS base}
@@ -654,7 +650,8 @@ an application name different than {\tt test} in the previous step, the
 directory name will change accordingly.
 These directories and their contents
 must be copied to your TFTP/NFS server.  The actual location depends upon
-the remote file access technique being used s described in the following section.
+the remote file access technique being used as described
+in the following section.
 
 
 \subsection{Run the example application on an RTEMS IOC}
