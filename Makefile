@@ -17,8 +17,7 @@ tutorial/tutorial.html: tutorial.pdf
 	cp tutorial.pdf getAndBuildTools.sh tutorial
 
 install: html pdf
-	scp `find tutorial -type f -print -depth` \
-			$(WEB_BASE)
+	cd tutorial ; scp -r * $(WEB_BASE)
 
 clean:
 	rm -f *.dvi *.log *.aux *.bbl *.blg *.lof *.lot *.toc *.out
