@@ -124,11 +124,6 @@ build() {
             --enable-version-specific-runtime-libs \
             --enable-threads=rtems \
             --enable-languages=c,c++ 
-
-        case "`uname`" in
-            Darwin) ${MAKE} -w "CC=cc -no-cpp-precomp" all ;;
-            *)      ${MAKE} -w all ;;
-        esac
         ${MAKE} -w install
         cd ..
     done
