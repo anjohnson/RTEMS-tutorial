@@ -18,19 +18,21 @@ PREFIX="${PREFIX:-/opt/rtems}"
 #
 # Specify the versions
 #
-GCC=gcc-3.2.3
-BINUTILS=binutils-2.13.2.1
+GCC=gcc-3.3.3
+BINUTILS=binutils-2.15
 NEWLIB=newlib-1.11.0
-GCCDIFF=20030507a
-NEWLIBDIFF=20030614
+BINUTILSDIFF=20040519
+GCCDIFF=20040420
+NEWLIBDIFF=20031113
 
 #
 # Where to get the GNU tools
 #
-RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/snapshots/c_tools/source
+RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/${BINUTILS}.tar.bz2
 RTEMS_GCC_URL=${RTEMS_SOURCES_URL}/${GCC}.tar.bz2
 RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/${NEWLIB}.tar.gz
+RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILS}-rtems-${BINUTILSDIFF}.diff
 RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCC}-rtems-${GCCDIFF}.diff
 RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIB}-rtems-${NEWLIBDIFF}.diff
 
@@ -56,13 +58,20 @@ export SHELL
 #
 getSource() {
     ${GET_COMMAND} "${RTEMS_BINUTILS_URL}"
+    if [ -n "$BINUTILSDIFF" ]
+    then
+        ${GET_COMMAND} "${RTEMS_BINUTILS_DIFF_URL}"
+    fi
     ${GET_COMMAND}  "${RTEMS_GCC_URL}"
     if [ -n "$GCCDIFF" ]
     then
         ${GET_COMMAND} "${RTEMS_GCC_DIFF_URL}"
     fi
      ${GET_COMMAND} "${RTEMS_NEWLIB_URL}"
-     ${GET_COMMAND} "${RTEMS_NEWLIB_DIFF_URL}"
+    if [ -n "$NEWLIBDIFF" ]
+    then
+        ${GET_COMMAND} "${RTEMS_NEWLIB_DIFF_URL}"
+    fi
 }
 
 #

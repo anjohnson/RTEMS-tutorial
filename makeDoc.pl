@@ -17,6 +17,7 @@ $RTEMS_SOURCES_URL = getParm("RTEMS_SOURCES_URL");
 $BINUTILS          = getParm("BINUTILS");
 $GCC               = getParm("GCC");
 $NEWLIB            = getParm("NEWLIB");
+$BINUTILSDIFF      = getParm("BINUTILSDIFF");
 $GCCDIFF           = getParm("GCCDIFF");
 $NEWLIBDIFF        = getParm("NEWLIBDIFF");
 
@@ -25,6 +26,7 @@ print "\\newcommand{\\RTEMSSOURCEURL}{$RTEMS_SOURCES_URL}\n";
 print "\\newcommand{\\BINUTILS}{$BINUTILS}\n";
 print "\\newcommand{\\GCC}{$GCC}\n";
 print "\\newcommand{\\NEWLIB}{$NEWLIB}\n";
+print "\\newcommand{\\BINUTILSDIFF}{$BINUTILSDIFF}\n";
 print "\\newcommand{\\GCCDIFF}{$GCCDIFF}\n";
 print "\\newcommand{\\NEWLIBDIFF}{$NEWLIBDIFF}\n";
 

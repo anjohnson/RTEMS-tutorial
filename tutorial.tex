@@ -5,6 +5,7 @@
 \usepackage{html}
 \usepackage{alltt}
 \usepackage{verbatimfiles}
+\usepackage{ifthen}
 
 \textwidth=6.5in
 \topmargin=0pt
@@ -30,6 +31,7 @@
 \newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
 \newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
 \newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
+\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILS-rtems-\BINUTILSDIFF.diff}
 \newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCC-rtems-\GCCDIFF.diff}
 \newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIB-rtems-\NEWLIBDIFF.diff}
 
@@ -140,16 +142,18 @@ The files can be downloaded using a web browser or a command-line program such a
 command examples have been split to help them fit on the page):
 {\small
 \begin{alltt}
-\verb@curl --remote-name@
+curl --remote-name
 \hspace{0.2in} \RTEMSBINUTILSURL
-\verb@curl --remote-name@
+curl --remote-name
 \hspace{0.2in} \RTEMSGCCURL
-\verb@curl --remote-name@
+curl --remote-name
 \hspace{0.2in} \RTEMSNEWLIBURL
-\verb@curl --remote-name@
-\hspace{0.2in} \RTEMSGCCDIFFURL
-\verb@curl --remote-name@
-\hspace{0.2in} \RTEMSNEWLIBDIFFURL
+\ifthenelse{\equal{}{\BINUTILSDIFF}}{}{curl --remote-name
+\hspace{0.2in} \RTEMSBINUTILSDIFFURL}
+\ifthenelse{\equal{}{\GCCDIFF}}{}{curl --remote-name
+\hspace{0.2in} \RTEMSGCCDIFFURL}
+\ifthenelse{\equal{}{\NEWLIBDIFF}}{}{curl --remote-name
+\hspace{0.2in} \RTEMSNEWLIBDIFFURL}
 \end{alltt}
 or
 \begin{alltt}
@@ -157,14 +161,10 @@ or
 \hspace{0.2in} \RTEMSBINUTILSURL
 \verb@wget --passive-ftp --no-directories --retr-symlinks@
 \hspace{0.2in} \RTEMSGCCURL
-\verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in} \RTEMSNEWLIBURL
-\verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in} \RTEMSGCCDIFFURL
-\verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in} \RTEMSNEWLIBDIFFURL
 \end{alltt}
+...
 }
+
 Depending on the type of firewall between your machine and the OAR FTP server
 you may need to remove the \verb@--passive-ftp@ option from the {\tt wget} commands.
 
@@ -192,19 +192,33 @@ cd ..
 If any patch files (those with a \verb@.diff@ suffix) were downloaded
 from the OAR FTP server the patches in those files must be applied before
 the tools can be compiled.
-For example, here is how the patches can be applied to the gcc sources:
-\begin{alltt}
-cd \GCC
-patch -p1 <../\GCC-rtems-\GCCDIFF.diff
-cd ..
-\end{alltt}
 
-And here is how the patches can be applied to the newlib sources:
+\ifthenelse{\equal{}{\BINUTILSDIFF}}{}{
+Here is how the patches can be applied to the binutils sources:
 \begin{alltt}
-cd \NEWLIB
-patch -p1 <../\NEWLIB-rtems-\NEWLIBDIFF.diff
-cd ..
+cd \BINUTILS \newline
+patch -p1 <../\BINUTILS-rtems-\BINUTILSDIFF.diff \newline
+cd .. \newline
 \end{alltt}
+}
+
+\ifthenelse{\equal{}{\GCCDIFF}}{}{
+Here is how the patches can be applied to the gcc sources:
+\begin{alltt}
+cd \GCC \newline
+patch -p1 <../\GCC-rtems-\GCCDIFF.diff \newline
+cd .. \newline
+\end{alltt}
+}
+
+\ifthenelse{\equal{}{\NEWLIBDIFF}}{}{
+Here is how the patches can be applied to the newlib sources:
+\begin{alltt}
+cd \NEWLIB \newline
+patch -p1 <../\NEWLIB-rtems-\NEWLIBDIFF.diff \newline
+cd .. \newline
+\end{alltt}
+}
 
 
 
