@@ -24,7 +24,7 @@ RTEMS_VERSION=4.7
 #
 # Where to install
 #
-PREFIX="${PREFIX:-/opt/rtems/rtems-${RTEMS_VERSION}}"
+PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 
 #
 # Where to get the GNU tools
