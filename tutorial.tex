@@ -555,10 +555,11 @@ RTEMS_VERSION=\rtemsToolVersion
 \end{alltt}
 while will have to be changed to reflect the directory where you installed RTEMS.
 
-If you didn't install the RTEMS add-on packages you must edit
-your EPICS local configuration file (\verb@configure/CONFIG_SITE.Common.RTEMS@)
-and change the \verb@EPICSCOMMANDLINE_LIBRARY@ definition to \verb@EPICS@.
-You'll also need to add
+If you installed the RTEMS readline or tecla add-on packages you can edit
+your EPICS local configuration file (\verb@configure/os/CONFIG_SITE.Common.RTEMS@)
+and change the \verb@EPICSCOMMANDLINE_LIBRARY@ definition from \verb@EPICS@ to
+\verb@READLINE@ or \verb@LIBTECLA@, respectively.
+If you don't want to use NFS to access remote files you can add
 \begin{verbatim}
 OP_SYS_CFLAGS += -DOMIT_NFS
 \end{verbatim}
