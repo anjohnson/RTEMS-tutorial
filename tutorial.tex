@@ -1,0 +1,786 @@
+\documentclass{report}
+
+\usepackage{epsfig}
+\usepackage{times}
+\usepackage{html}
+\usepackage{alltt}
+\usepackage{verbatimfiles}
+
+\textwidth=6.5in
+\topmargin=0pt
+\headheight=0pt
+\textheight=8.6truein
+\oddsidemargin=0in
+\evensidemargin=0in
+\footskip=40pt
+
+\parindent=0pt
+\parskip=0.5ex
+
+%
+% Versions
+%
+\input versions.tex
+\newcommand{\rtemsVersion}{4.6.2}
+\newcommand{\rtemsPackages}{20041017}
+
+%
+% Where to get the GNU tools
+%
+\newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
+\newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
+\newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
+\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCC-rtems-\GCCDIFF.diff}
+\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIB-rtems-\NEWLIBDIFF.diff}
+
+\newcommand{\Bar}[1]{$\overline{\mbox{#1}}$}
+\newcommand{\RWbar}{$\mbox{R}/\overline{\mbox{W}}$}
+
+\title{Getting started with EPICS on RTEMS}
+\author{W. Eric Norum}
+
+\begin{document}
+\maketitle
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+This tutorial presents the steps needed to obtain and install
+the development tools and
+libraries required  to run EPICS IOC applications using RTEMS.
+As you can see by the size of this document the process isn't trivial,
+but it's not terribly difficult either.
+
+Chapter two deals with the problem of getting all the tools in place.  This
+is the most difficult task.  Once the tools and operating system are working
+most of the work is complete.  Chapter three shows the steps needed to
+configure and build your first EPICS application for RTEMS.  After you've
+completed those steps you can forget about this document and use the
+generic EPICS documentation.
+
+\begin{htmlonly}
+If you'd like to print this tutorial you can download a
+\htmladdnormallink{PDF version}{tutorial.pdf}.
+\end{htmlonly}
+
+
+This is a living document.  Please let me
+(\htmladdnormallink{norume@aps.anl.gov}{mailto:norume@aps.anl.gov})
+know which of these instructions worked for you and which did not.
+
+
+\chapter{Infrastructure -- Tools and Operating System}
+\section{Create the RTEMS source and installation directories}
+There should be at least 300 Mbytes of space available on the drive
+where these directories are located.
+The suggested location for the installation directory is \verb@/opt/rtems@.
+If you must place the root of the RTEMS installation in some other
+location, it is still a good idea to make a symbolic link from \verb@/opt/rtems@
+to the actual root of the RTEMS installation tree.
+The location of the RTEMS source is not critical.  This document assumes
+that the root of the RTEMs source tree is \verb@/usr/local/source/RTEMS@.
+
+Create the directories where the source will be placed
+and the results of the build installed:
+\begin{verbatim}
+/usr/local/source/RTEMS
+/usr/local/source/RTEMS/tools
+/opt/rtems
+\end{verbatim}
+
+\section{Add the directory containing the tools to your shell search path}
+The following sections assume that the directory into which
+you will install the cross-development tools
+(\verb@/opt/rtems/bin@) is on your shell search path.
+For shells
+like sh, bash, zsh and ksh you can to this with
+\begin{verbatim}
+PATH="$PATH:/opt/rtems/bin"
+\end{verbatim}
+For shells like csh and tcsh you can
+\begin{verbatim}
+set path = ( $path /opt/rtems/bin )
+\end{verbatim}
+
+
+\section{Get and build the development tools}
+RTEMS uses the GNU toolchain to build the executive and libraries.
+Information about the GNU tools can be found
+on the \htmladdnormallink{GNU home page}{http://www.gnu.org}.
+If you're feeling brave you can skip the following sections and turn loose
+the script included in appendix\ref{getAndBuildTools}.
+\begin{htmlonly}
+The script can also be \htmladdnormallink{downloaded from here}{getAndBuildTools.sh}.
+\end{htmlonly}
+The script
+attempts to download, unpack, configure, build and install
+the GNU cross-development
+tools and libraries for one or more target architectures.  To use
+the script, set the \verb@ARCHS@ 
+environment variable to the architectures you wish to support, then 
+\begin{verbatim}
+sh getAndBuildTools.sh
+\end{verbatim}
+Set the MAKE environment variable to the name of whatever make program you
+need for your system.
+
+\subsection {Download the tool source files}
+The source for the GNU tools should be obtained from
+the On-line Applications Research (OAR) FTP server since
+that server provides any RTEMS-specific patches that may have to be
+applied before the tools can be built.
+
+The files in the OAR FTP server directory
+{\small \RTEMSSOURCEURL}
+should be downloaded to the RTEMS/tools directory created above.
+The files can be downloaded using a web browser or a command-line program such as \verb@curl@ or \verb@wget@. (note that the
+command examples have been split to help them fit on the page):
+{\small
+\begin{alltt}
+\verb@curl --remote-name@
+\hspace{0.2in} \RTEMSBINUTILSURL
+\verb@curl --remote-name@
+\hspace{0.2in} \RTEMSGCCURL
+\verb@curl --remote-name@
+\hspace{0.2in} \RTEMSNEWLIBURL
+\verb@curl --remote-name@
+\hspace{0.2in} \RTEMSGCCDIFFURL
+\verb@curl --remote-name@
+\hspace{0.2in} \RTEMSNEWLIBDIFFURL
+\end{alltt}
+or
+\begin{alltt}
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in} \RTEMSBINUTILSURL
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in} \RTEMSGCCURL
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in} \RTEMSNEWLIBURL
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in} \RTEMSGCCDIFFURL
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in} \RTEMSNEWLIBDIFFURL
+\end{alltt}
+}
+Depending on the type of firewall between your machine and the OAR FTP server
+you may need to remove the \verb@--passive-ftp@ option from the {\tt wget} commands.
+
+
+\subsection {Unpack the source archives:}
+
+The following commands will extract the GNU tool sources from the
+downloaded tar archive files.
+\begin{alltt}
+bzcat \BINUTILS.tar.bz2 | tar xf -
+bzcat \GCC.tar.bz2 | tar xf -
+zcat \NEWLIB.tar.gz | tar xf -
+\end{alltt}
+
+To build the newlib libraries needed by RTEMS you must make a symbolic
+link to the newlib source directory from the gcc source directory.
+\begin{alltt}
+cd \GCC
+rm -rf newlib
+ln -s ../\NEWLIB/newlib newlib
+cd ..
+\end{alltt}
+
+\subsection {Apply any RTEMS-specific patches}
+If any patch files (those with a \verb@.diff@ suffix) were downloaded
+from the OAR FTP server the patches in those files must be applied before
+the tools can be compiled.
+For example, here is how the patches can be applied to the gcc sources:
+\begin{alltt}
+cd \GCC
+patch -p1 <../\GCC-rtems-\GCCDIFF.diff
+cd ..
+\end{alltt}
+
+And here is how the patches can be applied to the newlib sources:
+\begin{alltt}
+cd \NEWLIB
+patch -p1 <../\NEWLIB-rtems-\NEWLIBDIFF.diff
+cd ..
+\end{alltt}
+
+
+
+
+
+\subsection {Configure, build and install the `binutils':}
+The commands in this section must be repeated for each desired target
+architecture.  The examples shown build the tools for Motorola Power PC targets.
+
+\begin{enumerate}
+\item Create a directory in which the tools will be built and
+change to that directory.
+\begin{verbatim}
+rm -rf build
+mkdir build
+cd build
+\end{verbatim}
+
+\item Configure the tools.
+\begin{alltt}
+../\BINUTILS/configure --target=powerpc-rtems --prefix=/opt/rtems
+\end{alltt}
+You should replace the `\verb@powerpc@' with the name of the architecture
+for which you're
+building the tools.  Common alternatives are `\verb@m68k@' and `\verb@i386@' for
+the Motorola M68k and Intel x86 family of processors, respectively.
+
+\item Build and install the tools.
+\begin{verbatim}
+make -w all install
+\end{verbatim}
+In this and all subsequent cases the use of a GNU make program is required.
+On some hosts you'll have to use \verb@gmake@ instead of \verb@make@.
+
+\item Return to the directory containing the tool and library sources.
+\begin{verbatim}
+cd ..
+\end{verbatim}
+\end{enumerate}
+
+\subsection {Configure, build and install the cross-compiler and libraries}
+
+\begin{enumerate}
+\item Create a directory in which the tools will be built and
+change to that directory.
+\begin{verbatim}
+rm -rf build
+mkdir build
+cd build
+\end{verbatim}
+
+\item Configure the compiler and libraries.
+\begin{alltt}
+../\GCC/configure --target=powerpc-rtems --prefix=/opt/rtems \verb@\@
+            --with-gnu-as --with-gnu-ld --with-newlib --verbose \verb@\@
+            --with-system-zlib --disable-nls \verb@\@
+            --enable-version-specific-runtime-libs \verb@\@
+            --enable-threads=rtems \verb@\@
+            --enable-languages=c,c++ 
+\end{alltt}
+You should again replace the '\verb@powerpc@' with the name of the architecture
+for which you're
+building the cross-compiler and libraries.
+
+\item Build and install the cross-compiler and libraries by.
+\begin{verbatim}
+make -w all install
+\end{verbatim}
+On Mac OS X (Darwin) you'll have to use the command:
+\begin{verbatim}
+make -w "CC=cc -no-cpp-precomp" all install
+\end{verbatim}
+
+\item Return to the directory containing the tool and library sources.
+\begin{verbatim}
+cd ..
+\end{verbatim}
+\end{enumerate}
+
+
+
+\section{Get, build and install RTEMS}
+\subsection {Download the RTEMS source from the OAR web server.}
+
+At the time of writing no release of RTEMS was capable of
+supporting EPICS so you had to, and may still have to, work with a
+developer's snapshot.
+The latest snapshot is available in
+
+\begin{verbatim}
+ftp://www.rtems.com/pub/rtems/snapshots/rtems/current/
+\end{verbatim}
+
+
+The compressed {\it tar} archive in this directory can be downloaded using a web browser or a command-line program such as \verb@curl@ or \verb@wget@:
+{\small
+\begin{alltt}
+\verb@curl --remote-name@
+\hspace{0.2in}'ftp://www.rtems.com/pub/rtems/snapshots/rtems/current/*.tar.bz2'
+\end{alltt}
+or
+\begin{alltt}
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.2in}'ftp://www.rtems.com/pub/rtems/snapshots/rtems/current/*.tar.bz2'
+\end{alltt}
+}
+Depending on the type of firewall between your machine and the OAR FTP server
+you may need to remove the \verb@--passive-ftp@ option from the {\tt wget} command.
+
+
+When you are done you should have the compressed archive with a name something like
+\begin{alltt}
+rtems-\rtemsVersion.tar.bz2
+\end{alltt}
+
+\subsection {Unpack the RTEMS sources}
+Change to your RTEMS source directory and unpack the RTEMS sources by:
+\begin{alltt}
+bzcat rtems-\rtemsVersion.tar.bz2 | tar xf -
+\end{alltt}
+This will create the directory {\tt rtems-\rtemsVersion} 
+and unpack all the RTEMS source into that directory.
+
+\subsection {Make changes to the RTEMS source to reflect your local conditions.}
+Some of the board-support-packages distributed with RTEMS may require
+modifications to match the hardware in use at your site.  The following 
+sections describe changes commonly made to two of these board-support-packages.
+\subsubsection {MVME167}
+The linker script distributed with RTEMS assumes an MVME167 with 4~Mbytes of
+on-board memory starting at location 0x00800000.  A more common configuration
+is 16~Mbytes of memory starting at location 0x00000000.  To reflect this
+configuration make the following changes to
+\begin{alltt}
+rtems-\rtemsVersion/c/src/lib/libbsp/m68k/mvme167/startup/linkcmds
+\end{alltt}
+\begin{verbatim}
+@@ -24,8 +24,8 @@
+ /*
+  * Declare some sizes. Heap is sized at whatever ram space is left.
+  */
+-_RamBase = DEFINED(_RamBase) ? _RamBase : 0x00800000;
+-_RamSize = DEFINED(_RamSize) ? _RamSize : 4M;
++_RamBase = DEFINED(_RamBase) ? _RamBase : 0x0;
++_RamSize = DEFINED(_RamSize) ? _RamSize : 16M;
+ _HeapSize = DEFINED(_HeapSize) ? _HeapSize : 0;
+ _StackSize = DEFINED(_StackSize) ? _StackSize : 0x1000;
+ 
+@@ -35,7 +35,7 @@
+       This is where we put one board. The base address should be
+       passed as a parameter when building multiprocessor images
+       where each board resides at a different address. */
+-  ram  : org = 0x00800000, l = 4M
++  ram  : org = 0x00000000, l = 16M
+   rom  : org = 0xFF800000, l = 4M
+   sram : org = 0xFFE00000, l = 128K
+ }
+\end{verbatim}
+
+\subsubsection {PC-x86}
+A change I like to make to the RTEMS pc386 source is
+to increase the number of lines on the console display from 25 to 50 since
+I find that the output from some EPICS commands  scrolls off the display
+when only 25 lines are present.
+To make this change, add the `\verb@#define@' line shown below
+\begin{alltt}
+rtems-\rtemsVersion/c/src/lib/libbsp/i386/pc386/start/start16.S
+\end{alltt}
+\begin{verbatim}
+ +------------------------------------------------------*/
+ 
+ #include <bspopts.h>
+ #define RTEMS_VIDEO_80x50
+ 
+ /*--------------------------------------------------------+ | Constants
+\end{verbatim}
+
+Another change I make is to automatically fall back to using COM2: as a
+serial-line console (9600-8N1) if no video adapter is present.  This allows
+the pc386 BSP to be used on conventional PCs with video adapters as well
+as with embedded PCs (PC-104) which have no video adapters.
+To make this change, add the `\verb@#define@' line shown below
+\begin{alltt}
+rtems-\rtemsVersion/c/src/lib/libbsp/i386/pc386/console/console.c
+\end{alltt}
+\begin{verbatim}
+   */
+  rtems_termios_initialize ();
+
+#define RTEMS_RUNTIME_CONSOLE_SELECT
+#ifdef RTEMS_RUNTIME_CONSOLE_SELECT
+  /*
+   * If no video card, fall back to serial port console
+\end{verbatim}
+
+\subsection{Build and install RTEMS}
+\label{RTEMS_BSP_CONFIG}
+\begin{enumerate}
+\item
+It is best to start with a clean slate.  {\bf Make very sure you're in the
+right directory before running the rm command!}
+\begin{verbatim}
+cd /usr/local/source/RTEMS
+rm -rf build
+mkdir build
+cd build
+\end{verbatim}
+
+\item
+Configure RTEMS for your target architecture:
+\begin{alltt}
+cd /usr/local/source/RTEMS/build
+../rtems-\rtemsVersion/configure \verb@--target=powerpc-rtems --prefix=/opt/rtems \@
+  \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
+  \verb@  --enable-posix --enable-rtemsbsp=mvme2100 \@
+\end{alltt}
+You should replace the `\verb@powerpc@' with the name of the architecture
+for which you're building RTEMS.  Common alternatives
+are `\verb@m68k@' and `\verb@i386@' for
+the Motorola M68k and Intel x86 family of processors, respectively.
+Your should replace the `\verb@mvme2100@' with the board-support packages
+for your particular hardware
+
+You can build for more than one board-support package by specifying
+more names on the command line.  For example, for the \verb@m68k-rtems@
+architecture you could for a generic MC68360 system and an MVME-167 system
+by:
+\begin{alltt}
+cd /usr/local/source/RTEMS/build
+../rtems-\rtemsVersion/configure \verb@--target=m68k-rtems --prefix=/opt/rtems \@
+  \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
+  \verb@  --enable-posix --enable-rtemsbsp="gen68360 mvme167" \@
+\end{alltt}
+
+\end{enumerate}
+
+
+\section{Get, build and install some RTEMS add-on packages}
+The EPICS IOC shell uses the the libtecla or GNU readline package to provide command-line editing and command history.
+While the IOC shell can be compiled without these capabilities I think they're important enough to warrant
+making the effort to download and install the extra packages.
+GNU readline is more well-tested, but libtecla does not bring along
+the problems associated with the GNU Public License.
+
+EPICS can use either TFTP or NFS for remote file access.
+NFS provides considerably more flexibility so it's a good
+idea to install this add-on package as well.
+
+\subsection{Download the add-on package sources}
+The latest versions of these files are in
+\begin{verbatim}
+ftp://ftp.rtems.com/pub/rtems/snapshots/contrib/add_on_packages/
+\end{verbatim}
+
+The compressed {\it tar} archive in this directory can be downloaded using a web browser or a command-line program such a \verb@wget@ (note that the
+wget command example has been split to make it fit on this page):
+{\small
+\begin{alltt}
+\verb@wget --passive-ftp --no-directories --retr-symlinks@
+\hspace{0.3in}"ftp://ftp.rtems.com/pub/rtems/snapshots/contrib/add_on_packages/rtems-addon-packages-\rtemsPackages.tar.bz2"
+\end{alltt}
+}
+Depending on the type of firewall between your machine and the OAR FTP server
+you may need to remove the \verb@--passive-ftp@ option from the {\tt wget} command.
+
+
+When you are done you should have the compressed archive with a name something like
+\begin{alltt}
+rtems-addon-packages-\rtemsPackages.tar.bz2
+\end{alltt}
+
+\subsection{Unpack the add-on package sources}
+Change to your RTEMS source directory and unpack the RTEMS sources by:
+\begin{alltt}
+cd /usr/local/source/RTEMS
+bzcat rtems-addon-packages-\rtemsPackages.tar.bz2 | tar xf -
+\end{alltt}
+This will unpack the source for all the RTEMS packages into a directory named
+\begin{alltt}
+rtems-addon-packages-\rtemsPackages
+\end{alltt}
+
+
+\subsection{Set the RTEMS\_MAKEFILE\_PATH environment variable}
+The makefiles in the RTEMS packages use the \verb@RTEMS_MAKEFILE_PATH@ environment variable to determine the
+target architecture and board-support package.  For example,
+\begin{verbatim}
+export RTEMS_MAKEFILE_PATH=/opt/rtems/powerpc-rtems/mvme2100
+\end{verbatim}
+will select the Motorola Power PC architecture and the RTEMS mvme2100 board-support package.
+
+\subsection{Build and install the add-on packages}
+The {\it bit} script in the packages source directory builds and installs all the add-on packages.  To run
+the script change directories to the add-on packages directory and execute:
+\begin{verbatim}
+sh bit
+\end{verbatim}
+
+If you are building for more than one architecture or board-support package, you must run the {\it bit} script once
+for each variation with \verb@RTEMS_MAKEFILE_PATH@ set to the different architecture and board-support package.
+
+\section{Try running some RTEMS sample applications (optional)}
+The RTEMS build process creates some sample applications.  If you're just getting started with RTEMS it's probably
+a good idea to verify that you can actually run a simple RTEMS application on your target hardware before trying to
+run a full-blown EPICS IOC application.
+
+The actual method of loading an application into a target processor is
+hardware-dependent.  Section~\ref{exampleApp} describes a method which
+may be used with RTEMS mvme2100 targets.
+
+\chapter{EPICS Base}
+The first step in building an EPICS application is to download the EPICS
+base source from the APS server and unpack it.   The details on how
+to perform these operations are described on the APS web pages and will
+not be repeated here.  Make sure you get the R3.14.7 or later release of EPICS.
+
+\section{Specify the location of RTEMS tools and libraries}
+You must first let the EPICS Makefiles know where you've installed
+the RTEMS development tools and libraries.  The default location is
+\begin{verbatim}
+/opt/rtems
+\end{verbatim}
+If you've installed the RTEMS tools and libraries in a different location and
+ignored the advice to provide a symbolic link from
+\begin{verbatim}
+/opt/rtems
+\end{verbatim}
+to wherever you've installed RTEMS you need to edit the EPICS configuration
+file
+\begin{verbatim}
+configure/os/CONFIG.Common.RTEMS
+\end{verbatim}
+In this file you'll find the line
+\begin{verbatim}
+RTEMS_BASE=/opt/rtems
+\end{verbatim}
+while will have to be changed to reflect the directory where you installed RTEMS.
+
+If you didn't install the RTEMS add-on packages you must edit
+your EPICS local configuration file (\verb@configure/CONFIG_SITE.Common.RTEMS@)
+and change the \verb@EPICSCOMMANDLINE_LIBRARY@ definition to \verb@EPICS@.
+You'll also need to add
+\begin{verbatim}
+OP_SYS_CFLAGS += -DOMIT_NFS
+\end{verbatim}
+to this file.
+
+\section{Specify the network domain}
+If you're not using DHCP/BOOTP to provide network configuration information
+to your RTEMS IOCs you should edit
+your EPICS local configuration file (\verb@configure/CONFIG_SITE.Common.RTEMS@)
+and specify your Internet Domain Name as:
+\begin{verbatim}
+OP_SYS_CFLAGS += -DRTEMS_NETWORK_CONFIG_DNS_DOMAINNAME=aps.anl.gov
+\end{verbatim}
+
+\section{Specify the network interface}
+Some RTEMS board support packages support more than one type of network interface.
+The pc386 BSP, for example, can be configured to use several different
+network interface cards.  By default the EPICS network configuration for
+the pc386 BSP loads network drivers for all network interfaces which
+support run-time probing so if you've got one of these network interfaces you
+don't need to make any changes to the EPICS network configuration.
+If not, see the comments in
+\begin{alltt}
+src/RTEMS/base/rtems_netconfig.c
+\end{alltt}
+for instructions on selecting a network interface card when building your
+EPICS application.
+
+\section{Specify the target architectures}
+The \verb@configure/CONFIG_SITE@ file specifies the target
+architectures and board support packages to be supported.
+For example, I regularly build for a single target:
+\begin{verbatim}
+CROSS_COMPILER_TARGET_ARCHS=RTEMS-mvme2100
+\end{verbatim}
+If you want to build for multiple RTEMS targets you would change
+this line to something like
+\begin{verbatim}
+CROSS_COMPILER_TARGET_ARCHS=RTEMS-mvme2100 RTEMS-gen68360 RTEMS-pc386
+\end{verbatim}
+The format of the target architecture names is {\tt RTEMS-}{\it bspname}, where
+{\tt RTEMS-} indicates that the RTEMS development tools and libraries should
+be used, and
+{\it bspname} is the name of the RTEMS target architecture and
+board support package used back in section~\ref{RTEMS_BSP_CONFIG}.
+
+Some extensions still use the old configuration procedure so it's a good idea
+to make the same change in
+\begin{verbatim}
+config/CONFIG_SITE
+\end{verbatim}
+as well.
+
+
+\section{Build EPICS base}
+This step is very simple.  Just change directories to the EPICS \verb@base@ directory
+and run
+\begin{verbatim}
+make
+\end{verbatim}
+After a while you'll end up with a working set of EPICS base libraries and tools.
+
+
+\chapter{EPICS Applications}
+Now that you've built the EPICS base libraries you're ready to build and run your
+first EPICS application.  Once you've got this application running you can
+forget about this tutorial and revert to using the standard EPICS documentation.
+You can start with your own special application or you can start with the
+example application that is provided with the EPICS distribution.
+The following sections
+describe the procedure to create, build  and run this example application.
+\section{The EPICS example application}
+
+\subsection{Build the example application}
+\begin{enumerate}
+
+\item Create a new directory to hold the application source and
+then `cd' to that directory.
+
+\item Run the \verb@makeBaseApp.pl@ program to create the example application:
+\begin{verbatim}
+makeBaseApp.pl -t example test
+makeBaseApp.pl -i -t example -a RTEMS-mvme2100 test
+\end{verbatim}
+If you get complaints about not being able to run these commands you've
+probably forgotten to put the `bin'
+directory created in the previous section on your shell executable search path. 
+
+The `\verb@test@' in the two \verb@makeBaseApp.pl@ commands can be replaced with whatever name you
+want to give your example application.
+The `\verb@RTEMS-mvme2100@' can be replaced with whatever target architecture you
+plan to use to run the example application.
+
+\item Build the example application by running
+\begin{verbatim}
+make
+\end{verbatim}
+\end{enumerate}
+
+\subsection{Install the EPICS IOC files on the TFTP/NFS server}
+The application build process creates {\tt db} and {\tt dbd} directories
+in the top-level application directory and
+produces a set of IOC shell commands in
+the {\tt st.cmd} file in the {\tt iocBoot/ioctest} directory.  If you chose
+an application name different than {\tt test} in the previous step, the
+directory name will change accordingly.
+These directories and their contents
+must be copied to your TFTP/NFS server.  The actual location depends upon
+the remote file access technique being used s described in the following section.
+
+
+\subsection{Run the example application on an RTEMS IOC}
+\label{exampleApp}
+Everything's now ready to go.  The only item left is arranging some
+way of loading the RTEMS/EPICS application executable image into the IOC.
+There are many ways of doing this (floppy disks, PROM images, etc.), but
+I find using a BOOTP/DHCP/TFTP
+server to be the most convenient.  The remainder of this section describes
+how I load executables into my RTEMS-mvme2100 and RTEMS-pc386 IOCs.
+If you're running a different type of IOC you'll have to figure out the
+required steps on your own.  The RTEMS documentation may provide the
+required information since an EPICS IOC application is an RTEMS application
+like any other.
+
+Some RTEMS board-support packages require an NTP server on the network.
+If such an IOC doesn't receive a time-synchronization packet from an NTP
+server the IOC time will be set to 00:00:00, January 1, 2001.
+
+\subsection{Location of EPICS startup script}
+If you're using BOOTP/DHCP to provide network configuration information
+to your IOC you should use DHCP site-specific option 129 to specify
+the path to the IOC startup script.
+If you're using PPCBUG you should set the NIOT `Argument File Name' parameter
+to the IOC startup script path.
+
+If you're using NFS for remote file access the EPICS initialization uses the
+startup script pathname to determine the parameters for the initial NFS mount.
+If the startup script pathname begins with a `\verb@/@' the first component
+of the pathname is used as both the server path and the local mount point.
+If the startup script pathname does not begin with a `\verb@/@' the
+first component of the pathname is used as the local mount point and the
+server path is ``\verb@/tftpboot/@'' followed by the first component of
+the pathname.  This allows the NFS and TFTP clients to have a similar
+view of the remote filesystem.
+
+If you're using TFTP for remote file access
+the RTEMS startup code
+first changes directories to {\tt /epics/}{\it hostname}{\tt /} within
+the TFTP server, where {\it hostname} is the Internet host name of the IOC.
+The startup code then reads IOC shell commands from the {\tt st.cmd} script
+in that directory.
+The name ({\tt st.cmd}) and location of the startup script are fixed from the IOCs point of
+view so it must be installed in the corresponding location on the TFTP server.
+Many sites run the TFTP server with an option which changes its root directory.
+On this type of system you'll have to copy the startup script to the
+{\tt /epics/}{\it hostname}{\tt /} directory within the TFTP server's root
+directory.  On a system whose TFTP server runs with its root
+directory set to {\tt /tftpboot} the startup script for the IOC
+whose name is {\tt norumx1} would be placed in
+\begin{verbatim}
+/tftpboot/epics/norumx1/st.cmd
+\end{verbatim}
+The application build process creates {\tt db} and {\tt dbd} directories
+in the top-level application directory.  These directories and their contents
+must be copied to the IOC's directory on the TFTP server.  For the 
+example described above the
+command to install the files for the {\tt norumx1} IOC is
+\begin{verbatim}
+cp -r db dbd /tftpboot/epics/norumx1
+\end{verbatim}
+
+\subsubsection{MVME2100 Using PPCBUG}
+\begin{enumerate}
+\item Use the PPCBUG ENV command to set the `Network PReP-Boot Mode Enable'
+parameter to `Y'.
+\item Use the PPCBUG NIOT command to set the network parameters.  Here are the
+parameters for a test IOC I use:
+\begin{verbatim}
+Controller LUN =00
+Device LUN     =00
+Node Control Memory Address =FFE10000
+Client IP Address      =164.54.8.8
+Server IP Address      =164.54.8.131
+Subnet IP Address Mask =255.255.252.0
+Broadcast IP Address   =164.54.11.255
+Gateway IP Address     =0.0.0.0
+Boot File Name ("NULL" for None)     =/epics/test/bin/RTEMS-mvme2100/example.boot
+Argument File Name ("NULL" for None) =/epics/test/iocBoot/iocexample/st.cmd
+Boot File Load Address         =001F0000
+Boot File Execution Address    =001F0000
+Boot File Execution Delay      =00000000
+Boot File Length               =00000000
+Boot File Byte Offset          =00000000
+BOOTP/RARP Request Retry       =00
+TFTP/ARP Request Retry         =00
+Trace Character Buffer Address =00000000
+BOOTP/RARP Request Control: Always/When-Needed (A/W)=W
+BOOTP/RARP Reply Update Control: Yes/No (Y/N)       =Y
+\end{verbatim}
+\item Set up your TFTP/NFS servers.  PPCBUG uses TFTP
+to load the executable image then the EPICS initialization uses
+NFS to read the EPICS startup script (the `Argument File Name' in the NIOT
+parameters).
+I set the TFTP server root to /tftpboot and arrange for the NFS server to
+export /tftpboot/epics to the IOCs.  This arrangement lets me simply copy the
+application tree, beginning at the <top> directory to the TFTP/NFS server area.
+\end{enumerate}
+
+\subsubsection{PC386}
+\begin{enumerate}
+\item Install an EtherBoot bootstrap PROM image obtained from
+the `ROM-o-matic' server (http://www.rom-o-matic.net/) on the IOC
+network interface cards.
+\item Set up your BOOTP/DHCP server to provide the network configuration
+parameters to the IOC.
+\item The TFTP and NFS servers can be configured as noted above.
+\end{enumerate}
+
+The cexp package can be used to
+incrementally load your application components.  This package can not
+be distributed with RTEMS or EPICS since it uses components covered by
+the GNU Public License.
+
+
+\appendix
+\chapter{Script to get and build the cross-development tools}
+\label{getAndBuildTools}
+If you're feeling brave you can turn loose the following script.  It attempts
+to download, unpack, configure, build and install the GNU cross-development
+tools and libraries for one or more target architectures.  To use
+the script, set the \verb@ARCHS@ 
+environment variable to the architectures you wish to support, then 
+\begin{verbatim}
+sh getAndBuildTools.sh
+\end{verbatim}
+\verbatimfile{getAndBuildTools.sh}
+
+\end{document}
