@@ -6,26 +6,25 @@
 
 #
 # Specify the architectures for which the tools are to be built
-# To build for multiple targets: ARCHS="m68k powerpc i386"
+# To build for single target: ARCHS="m68k"
 #
-ARCHS="${ARCHS:-powerpc}"
-
-#
-# Where to install
-#
-PREFIX="${PREFIX:-/opt/rtems}"
+ARCHS="${ARCHS:-m68k i386 powerpc}"
 
 #
 # Specify the versions
 #
-GCC=gcc-3.2.3
+GCC=gcc-3.4.3
 BINUTILS=binutils-2.15
 NEWLIB=newlib-1.12.0
 BINUTILSDIFF=20040519
-GCCDIFF=20040420
-#NEWLIBDIFF=20031113
+GCCDIFF=
 NEWLIBDIFF=
 RTEMS_VERSION=4.7
+
+#
+# Where to install
+#
+PREFIX="${PREFIX:-/opt/rtems/rtems-${RTEMS_VERSION}}"
 
 #
 # Where to get the GNU tools

@@ -78,9 +78,9 @@ know which of these instructions worked for you and which did not.
 \section{Create the RTEMS source and installation directories}
 There should be at least 300 Mbytes of space available on the drive
 where these directories are located.
-The suggested location for the installation directory is \verb@/opt/rtems@.
+The suggested location for the installation directory is \verb@/opt/rtems/rtems\rtemsToolVersion@.
 If you must place the root of the RTEMS installation in some other
-location, it is still a good idea to make a symbolic link from \verb@/opt/rtems@
+location, it is still a good idea to make a symbolic link from \verb@/opt/rtems/rtems\rtemsToolVersion@
 to the actual root of the RTEMS installation tree.
 The location of the RTEMS source is not critical.  This document assumes
 that the root of the RTEMs source tree is \verb@/usr/local/source/RTEMS@.
@@ -90,21 +90,21 @@ and the results of the build installed:
 \begin{verbatim}
 /usr/local/source/RTEMS
 /usr/local/source/RTEMS/tools
-/opt/rtems
+/opt/rtems/rtems\rtemsToolVersion
 \end{verbatim}
 
 \section{Add the directory containing the tools to your shell search path}
 The following sections assume that the directory into which
 you will install the cross-development tools
-(\verb@/opt/rtems/bin@) is on your shell search path.
+(\verb@/opt/rtems/rtems\rtemsToolVersion/bin@) is on your shell search path.
 For shells
 like sh, bash, zsh and ksh you can to this with
 \begin{verbatim}
-PATH="$PATH:/opt/rtems/bin"
+PATH="$PATH:/opt/rtems/rtems\rtemsToolVersion/bin"
 \end{verbatim}
 For shells like csh and tcsh you can
 \begin{verbatim}
-set path = ( $path /opt/rtems/bin )
+set path = ( $path /opt/rtems/rtems\rtemsToolVersion/bin )
 \end{verbatim}
 
 
@@ -239,7 +239,7 @@ cd build
 
 \item Configure the tools.
 \begin{alltt}
-../\BINUTILS/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems
+../\BINUTILS/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems/rtems\rtemsToolVersion
 \end{alltt}
 You should replace the `\verb@powerpc@' with the name of the architecture
 for which you're
@@ -272,7 +272,7 @@ cd build
 
 \item Configure the compiler and libraries.
 \begin{alltt}
-../\GCC/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems \verb@\@
+../\GCC/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems/rtems\rtemsToolVersion \verb@\@
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \verb@\@
             --with-system-zlib --disable-nls \verb@\@
             --enable-version-specific-runtime-libs \verb@\@
@@ -426,7 +426,7 @@ cd build
 Configure RTEMS for your target architecture:
 \begin{alltt}
 cd /usr/local/source/RTEMS/build
-../rtems-\rtemsVersion/configure \verb@--target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems \@
+../rtems-\rtemsVersion/configure \verb@--target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems/rtems\rtemsToolVersion \@
   \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
   \verb@  --enable-posix --enable-rtemsbsp=mvme2100 \@
 \end{alltt}
@@ -443,7 +443,7 @@ you could build for a generic MC68360 system and an MVME-167 system
 by:
 \begin{alltt}
 cd /usr/local/source/RTEMS/build
-../rtems-\rtemsVersion/configure \verb@--target=m68k-rtems\rtemsToolVersion --prefix=/opt/rtems \@
+../rtems-\rtemsVersion/configure \verb@--target=m68k-rtems\rtemsToolVersion --prefix=/opt/rtems/rtems\rtemsToolVersion \@
   \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
   \verb@  --enable-posix --enable-rtemsbsp="gen68360 mvme167" \@
 \end{alltt}
@@ -501,7 +501,7 @@ rtems-addon-packages-\rtemsPackages
 The makefiles in the RTEMS packages use the \verb@RTEMS_MAKEFILE_PATH@ environment variable to determine the
 target architecture and board-support package.  For example,
 \begin{verbatim}
-export RTEMS_MAKEFILE_PATH=/opt/rtems/powerpc-rtems\rtemsToolVersion/mvme2100
+export RTEMS_MAKEFILE_PATH=/opt/rtems/rtems\rtemsToolVersion/powerpc-rtems\rtemsToolVersion/mvme2100
 \end{verbatim}
 will select the Motorola Power PC architecture and the RTEMS mvme2100 board-support package.
 
@@ -534,21 +534,22 @@ not be repeated here.  Make sure you get the R3.14.7 or later release of EPICS.
 You must first let the EPICS Makefiles know where you've installed
 the RTEMS development tools and libraries.  The default location is
 \begin{verbatim}
-/opt/rtems
+/opt/rtems/rtems\rtemsToolVersion
 \end{verbatim}
 If you've installed the RTEMS tools and libraries in a different location and
 ignored the advice to provide a symbolic link from
 \begin{verbatim}
-/opt/rtems
+/opt/rtems/rtems\rtemsToolVersion
 \end{verbatim}
 to wherever you've installed RTEMS you need to edit the EPICS configuration
 file
 \begin{verbatim}
 configure/os/CONFIG.Common.RTEMS
 \end{verbatim}
-In this file you'll find the line
+In this file you'll find the lines
 \begin{verbatim}
-RTEMS_BASE=/opt/rtems
+RTEMS_BASE=/opt/rtems/rtems\rtemsToolVersion
+RTEMS_VERSION=\rtemsToolVersion
 \end{verbatim}
 while will have to be changed to reflect the directory where you installed RTEMS.
 
