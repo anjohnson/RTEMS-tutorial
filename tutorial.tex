@@ -22,7 +22,7 @@
 % Versions
 %
 \input versions.tex
-\newcommand{\rtemsVersion}{4.6.2}
+\newcommand{\rtemsVersion}{4.7}
 \newcommand{\rtemsPackages}{20041017}
 
 %
@@ -239,7 +239,7 @@ cd build
 
 \item Configure the tools.
 \begin{alltt}
-../\BINUTILS/configure --target=powerpc-rtems --prefix=/opt/rtems
+../\BINUTILS/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems
 \end{alltt}
 You should replace the `\verb@powerpc@' with the name of the architecture
 for which you're
@@ -272,7 +272,7 @@ cd build
 
 \item Configure the compiler and libraries.
 \begin{alltt}
-../\GCC/configure --target=powerpc-rtems --prefix=/opt/rtems \verb@\@
+../\GCC/configure --target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems \verb@\@
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \verb@\@
             --with-system-zlib --disable-nls \verb@\@
             --enable-version-specific-runtime-libs \verb@\@
@@ -426,7 +426,7 @@ cd build
 Configure RTEMS for your target architecture:
 \begin{alltt}
 cd /usr/local/source/RTEMS/build
-../rtems-\rtemsVersion/configure \verb@--target=powerpc-rtems --prefix=/opt/rtems \@
+../rtems-\rtemsVersion/configure \verb@--target=powerpc-rtems\rtemsToolVersion --prefix=/opt/rtems \@
   \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
   \verb@  --enable-posix --enable-rtemsbsp=mvme2100 \@
 \end{alltt}
@@ -443,7 +443,7 @@ you could build for a generic MC68360 system and an MVME-167 system
 by:
 \begin{alltt}
 cd /usr/local/source/RTEMS/build
-../rtems-\rtemsVersion/configure \verb@--target=m68k-rtems --prefix=/opt/rtems \@
+../rtems-\rtemsVersion/configure \verb@--target=m68k-rtems\rtemsToolVersion --prefix=/opt/rtems \@
   \verb@  --enable-cxx --enable-rdbg --disable-tests --enable-networking \@
   \verb@  --enable-posix --enable-rtemsbsp="gen68360 mvme167" \@
 \end{alltt}
@@ -501,7 +501,7 @@ rtems-addon-packages-\rtemsPackages
 The makefiles in the RTEMS packages use the \verb@RTEMS_MAKEFILE_PATH@ environment variable to determine the
 target architecture and board-support package.  For example,
 \begin{verbatim}
-export RTEMS_MAKEFILE_PATH=/opt/rtems/powerpc-rtems/mvme2100
+export RTEMS_MAKEFILE_PATH=/opt/rtems/powerpc-rtems\rtemsToolVersion/mvme2100
 \end{verbatim}
 will select the Motorola Power PC architecture and the RTEMS mvme2100 board-support package.
 

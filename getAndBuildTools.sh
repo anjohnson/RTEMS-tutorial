@@ -18,12 +18,14 @@ PREFIX="${PREFIX:-/opt/rtems}"
 #
 # Specify the versions
 #
-GCC=gcc-3.3.3
+GCC=gcc-3.2.3
 BINUTILS=binutils-2.15
-NEWLIB=newlib-1.11.0
+NEWLIB=newlib-1.12.0
 BINUTILSDIFF=20040519
 GCCDIFF=20040420
-NEWLIBDIFF=20031113
+#NEWLIBDIFF=20031113
+NEWLIBDIFF=
+RTEMS_VERSION=4.7
 
 #
 # Where to get the GNU tools
@@ -120,14 +122,14 @@ build() {
         rm -rf build
         mkdir build
         cd build
-        "${SHELL}" "../${BINUTILS}/configure" "--target=${arch}-rtems" "--prefix=${PREFIX}"
+        "${SHELL}" "../${BINUTILS}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
         ${MAKE} -w all install
         cd ..
 
         rm -rf build
         mkdir build
         cd build
-       "${SHELL}" "../${GCC}/configure" "--target=${arch}-rtems" "--prefix=${PREFIX}" \
+       "${SHELL}" "../${GCC}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \
             --with-system-zlib --disable-nls \
             --enable-version-specific-runtime-libs \
