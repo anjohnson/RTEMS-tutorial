@@ -112,6 +112,16 @@ Information about the GNU tools can be found
 on the \htmladdnormallink{GNU home page}{http://www.gnu.org}.
 If you're feeling brave you can skip the following sections and turn loose
 the script included in appendix\ref{getAndBuildTools}.
+In either case, if you're building on Solaris you'll need
+to ensure that you have GNU make (gmake) installed on your system
+and also set a couple of environment variables for things to build
+properly:
+\begin{alltt}
+MAKE=gmake
+INTLLIBS=-lintl
+\end{alltt}
+
+
 \begin{htmlonly}
 The script can also be \htmladdnormallink{downloaded from here}{getAndBuildTools.sh}.
 \end{htmlonly}
