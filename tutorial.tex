@@ -776,7 +776,7 @@ NFS to read the EPICS startup script (the `Argument File Name' in the NIOT
 parameters).
 I set the TFTP server root to /tftpboot and arrange for the NFS server to
 export /tftpboot/epics to the IOCs.  This arrangement lets me simply copy the
-application tree, beginning at the <top> directory to the TFTP/NFS server area.
+application tree, beginning at the \verb@<top>@ directory to the TFTP/NFS server area.
 \end{enumerate}
 
 \subsubsection{PC386}
@@ -801,9 +801,10 @@ NAMESERVER=192.168.8.167
 NETMASK=255.255.252.0
 CMDLINE=epics/i2c/iocBoot/ioci2c/st.cmd
 SERVER=192.168.8.161
+NFSMOUNT=106.74@nfssrv:/export/nfssrv:/home/nfssrv
 \end{verbatim}
 \item Use the bootstrap {\tt tftp} command to load the IOC application image
-(which may include a tar image of the in-memory filesystem contents).
+(which may include a tar image of the in-memory filesystem contents in which case the CMDLINE will likely look something like {\tt /st.cmd} and the NFSMOUNT need not be present).
 \item Use the bootstrap {\tt goram} command to start the application or the
 {\tt program} command to burn the image into the on-board flash memory.  In
 the latter case you may want to also use the {\tt setenv} command to set the

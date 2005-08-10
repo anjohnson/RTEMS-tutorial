@@ -14,9 +14,9 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 # Specify the versions
 #
 GCC=gcc-3.4.3
-BINUTILS=binutils-2.15
+BINUTILS=binutils-2.16.1
 NEWLIB=newlib-1.12.0
-BINUTILSDIFF=20040519
+BINUTILSDIFF=
 GCCDIFF=
 NEWLIBDIFF=
 RTEMS_VERSION=4.7
@@ -42,6 +42,7 @@ RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIB}-rtems-${NEWLIBDIFF}.diff
 #
 #GET_COMMAND="curl --remote-name"
 GET_COMMAND="wget --passive-ftp --no-directories --retr-symlinks "
+GET_COMMAND="wget --no-directories --retr-symlinks "
 
 #
 # Allow environment to override some programs
