@@ -1,4 +1,4 @@
-WEB_BASE=/net/epics/Public/epics/base/RTEMS/tutorial
+WEB_BASE=phoebus:/net/epics/Public/epics/base/RTEMS/tutorial
 TEXFILES = tutorial.tex
 
 all: pdf html
