@@ -13,12 +13,12 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 #
 # Specify the versions
 #
-GCC=gcc-4.0.2
+GCC=gcc-4.1.0
 BINUTILS=binutils-2.16.1
-NEWLIB=newlib-1.13.0
+NEWLIB=newlib-1.14.0
 BINUTILSDIFF=20050816
 GCCDIFF=
-NEWLIBDIFF=20050810
+NEWLIBDIFF=
 RTEMS_VERSION=4.7
 
 #
