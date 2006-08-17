@@ -13,12 +13,12 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 #
 # Specify the versions
 #
-GCC=gcc-4.1.0
-BINUTILS=binutils-2.16.1
+GCC=gcc-4.1.1
+BINUTILS=binutils-2.17
 NEWLIB=newlib-1.14.0
-BINUTILSDIFF=20050816
+BINUTILSDIFF=binutils-2.17-rtems-20060711
 GCCDIFF=
-NEWLIBDIFF=
+NEWLIBDIFF=newlib-1.14.0-rtems-20060704
 RTEMS_VERSION=4.7
 
 #
@@ -101,7 +101,7 @@ unpackSource() {
     done
 
     rm -rf "${NEWLIB}"
-    zcat "${NEWLIB}.tar.gz" | tar xf -
+    zcat <"${NEWLIB}.tar.gz" | tar xf -
     for d in "${NEWLIB}"*.diff
     do
         if [ -r "$d" ]

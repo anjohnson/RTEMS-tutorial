@@ -141,7 +141,9 @@ need for your system.
 The source for the GNU tools should be obtained from
 the On-line Applications Research (OAR) FTP server since
 that server provides any RTEMS-specific patches that may have to be
-applied before the tools can be built.
+applied before the tools can be built. 
+GNU toolchain components gcc-4.1.0, binutils-2.17 and newlib-1.14.0 are
+known to require no patches!
 
 The files in the OAR FTP server directory
 {\small \RTEMSSOURCEURL}
@@ -184,7 +186,7 @@ downloaded tar archive files.
 \begin{alltt}
 bzcat \BINUTILS.tar.bz2 | tar xf -
 bzcat \GCC.tar.bz2 | tar xf -
-zcat \NEWLIB.tar.gz | tar xf -
+zcat <\NEWLIB.tar.gz | tar xf -
 \end{alltt}
 
 To build the newlib libraries needed by RTEMS you must make a symbolic
@@ -752,8 +754,8 @@ parameters for a test IOC I use:
 Controller LUN =00
 Device LUN     =00
 Node Control Memory Address =FFE10000
-Client IP Address      =192.168.8.8
-Server IP Address      =192.168.8.131
+Client IP Address      =www.xxx.yyy.8
+Server IP Address      =www.xxx.yyy.131
 Subnet IP Address Mask =255.255.252.0
 Broadcast IP Address   =192.168.11.255
 Gateway IP Address     =0.0.0.0
@@ -794,13 +796,13 @@ parameters to the IOC.
 \item Use the bootstrap {\tt setenv} command to set the EPICS and network
 configuration parameters:
 \begin{verbatim}
-IPADDR0=192.168.8.27
+IPADDR0=www.xxx.yyy.27
 HOSTNAME=ioccoldfire
 BOOTFILE=epics/ucdimm/bin/RTEMS-uC5282/ucdimm.boot
-NAMESERVER=192.168.8.167
+NAMESERVER=www.xxx.yyy.167
 NETMASK=255.255.252.0
 CMDLINE=epics/i2c/iocBoot/ioci2c/st.cmd
-SERVER=192.168.8.161
+SERVER=www.xxx.yyy.161
 NFSMOUNT=106.74@nfssrv:/export/nfssrv:/home/nfssrv
 \end{verbatim}
 \item Use the bootstrap {\tt tftp} command to load the IOC application image
