@@ -16,9 +16,9 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 GCC=gcc-4.1.1
 BINUTILS=binutils-2.17
 NEWLIB=newlib-1.14.0
-BINUTILSDIFF=binutils-2.17-rtems-20060711
-GCCDIFF=
-NEWLIBDIFF=newlib-1.14.0-rtems-20060704
+BINUTILSDIFF=binutils-2.17-rtems-20060711.diff
+GCCDIFF=gcc-4.1.1-bfinrtems-20060810a.diff
+NEWLIBDIFF=newlib-1.14.0-bfinrtems-20060810a.diff
 RTEMS_VERSION=4.7
 
 #
@@ -33,16 +33,16 @@ RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/${BINUTILS}.tar.bz2
 RTEMS_GCC_URL=${RTEMS_SOURCES_URL}/${GCC}.tar.bz2
 RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/${NEWLIB}.tar.gz
-RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILS}-rtems-${BINUTILSDIFF}.diff
-RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCC}-rtems-${GCCDIFF}.diff
-RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIB}-rtems-${NEWLIBDIFF}.diff
+RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILSDIFF}
+RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCCDIFF}
+RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIBDIFF}
 
 #
 # Uncomment one of the following depending upon which your system provides
 #
-#GET_COMMAND="curl --remote-name"
-GET_COMMAND="wget --passive-ftp --no-directories --retr-symlinks "
-GET_COMMAND="wget --no-directories --retr-symlinks "
+GET_COMMAND="curl --remote-name"
+#GET_COMMAND="wget --passive-ftp --no-directories --retr-symlinks "
+#GET_COMMAND="wget --no-directories --retr-symlinks "
 
 #
 # Allow environment to override some programs

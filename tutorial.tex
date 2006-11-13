@@ -31,9 +31,9 @@
 \newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
 \newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
 \newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
-\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILS-rtems-\BINUTILSDIFF.diff}
-\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCC-rtems-\GCCDIFF.diff}
-\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIB-rtems-\NEWLIBDIFF.diff}
+\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILSDIFF}
+\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCCDIFF}
+\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIBDIFF}
 
 \newcommand{\Bar}[1]{$\overline{\mbox{#1}}$}
 \newcommand{\RWbar}{$\mbox{R}/\overline{\mbox{W}}$}
@@ -207,7 +207,7 @@ the tools can be compiled.
 Here is how the patches can be applied to the binutils sources:
 \begin{alltt}
 cd \BINUTILS \newline
-patch -p1 <../\BINUTILS-rtems-\BINUTILSDIFF.diff \newline
+patch -p1 <../\BINUTILSDIFF \newline
 cd .. \newline
 \end{alltt}
 }
@@ -216,7 +216,7 @@ cd .. \newline
 Here is how the patches can be applied to the gcc sources:
 \begin{alltt}
 cd \GCC \newline
-patch -p1 <../\GCC-rtems-\GCCDIFF.diff \newline
+patch -p1 <../\GCCDIFF \newline
 cd .. \newline
 \end{alltt}
 }
@@ -225,7 +225,7 @@ cd .. \newline
 Here is how the patches can be applied to the newlib sources:
 \begin{alltt}
 cd \NEWLIB \newline
-patch -p1 <../\NEWLIB-rtems-\NEWLIBDIFF.diff \newline
+patch -p1 <../\NEWLIBDIFF \newline
 cd .. \newline
 \end{alltt}
 }
@@ -462,6 +462,12 @@ cd /usr/local/rtems/source/build
       --enable-posix --enable-rtemsbsp="uC5282 mvme167" \verb@\@
 \end{alltt}
 
+\item
+Compile and install:
+\begin{alltt}
+make -w
+make -w install
+\end{alltt}
 \end{enumerate}
 
 
