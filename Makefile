@@ -1,4 +1,4 @@
-WEB_BASE=phoebus:/net/epics/Public/epics/base/RTEMS/tutorial
+WEB_BASE=phoebus:/net/epics/Public/epics/base/RTEMS
 TEXFILES = tutorial.tex
 
 all: pdf html
@@ -17,7 +17,8 @@ tutorial/tutorial.html: tutorial.pdf
 	cp tutorial.pdf getAndBuildTools.sh tutorial
 
 install: html pdf
-	cd tutorial ; scp -r * $(WEB_BASE)
+	tar cfj ~/tutorial.tar.bz2 tutorial
+	echo "Please unpack $(HOME)/tutorial.tar.bz2 in $(WEB_BASE)   (web server)"
 
 clean:
 	rm -f *.dvi *.log *.aux *.bbl *.blg *.lof *.lot *.toc *.out

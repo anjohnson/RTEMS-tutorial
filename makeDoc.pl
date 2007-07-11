@@ -30,5 +30,5 @@ print "\\newcommand{\\NEWLIB}{$NEWLIB}\n";
 print "\\newcommand{\\BINUTILSDIFF}{$BINUTILSDIFF}\n";
 print "\\newcommand{\\GCCDIFF}{$GCCDIFF}\n";
 print "\\newcommand{\\NEWLIBDIFF}{$NEWLIBDIFF}\n";
-print "\\newcommand{\\rtemsToolVersion}{$RTEMS_VERSION}\n";
+print "\\newcommand{\\rtemsVersion}{$RTEMS_VERSION}\n";
 

@@ -13,13 +13,13 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 #
 # Specify the versions
 #
-GCC=gcc-4.2.0
+GCC=gcc-4.1.2
 BINUTILS=binutils-2.17
 NEWLIB=newlib-1.15.0
-BINUTILSDIFF=binutils-2.17-rtems4.8-20061021.diff
-GCCDIFF=gcc-core-4.2-20070221-rtems4.8-20070228.diff
-NEWLIBDIFF=newlib-1.15.0-rtems4.8-20070413.diff
-RTEMS_VERSION=4.8
+BINUTILSDIFF=binutils-2.17-rtems4.7-20061021.diff
+GCCDIFF=gcc-core-4.1.2-rtems4.7-20070216.diff
+NEWLIBDIFF=newlib-1.15.0-rtems4.7-20070208.diff
+RTEMS_VERSION=4.7.1
 
 #
 # Where to install
