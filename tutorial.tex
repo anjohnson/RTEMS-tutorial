@@ -321,12 +321,12 @@ The compressed {\it tar} archive in this directory can be downloaded using a web
 {\small
 \begin{alltt}
 \verb@curl --remote-name@
-\hspace{0.2in}'http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2'
+\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2
 \end{alltt}
 or
 \begin{alltt}
 \verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in}'http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2'
+\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2
 \end{alltt}
 }
 Depending on the type of firewall between your machine and the OAR FTP server
@@ -421,21 +421,14 @@ rtems-\rtemsVersion/c/src/lib/libbsp/i386/pc386/console/console.c
 \label{RTEMS_BSP_CONFIG}
 \begin{enumerate}
 \item
-It is best to start with a clean slate.  {\bf Make very sure you're in the
-right directory before running the rm command!}
-\begin{verbatim}
-cd /usr/local/rtems/source
-rm -rf build
-mkdir build
-cd build
-\end{verbatim}
+It is best to start with a clean slate.  Create a new directory in which to build or clean out all files in your existing build directory.
 
 \item
 Configure RTEMS for your target architecture:
 \begin{alltt}
-cd /usr/local/rtems/source/build
-../rtems-\rtemsVersion/configure --target=powerpc-rtems\rtemsVersion \verb@\@
-   --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
+cd /usr/local/rtems-\rtemsVersion/build
+\ldots/rtems-\rtemsVersion/configure --target=powerpc-rtems\rtemsVersion \verb@\@
+  --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
   --enable-cxx --enable-rdbg --disable-tests --enable-networking \verb@\@
   --enable-posix --enable-rtemsbsp=mvme2100 \verb@\@
 \end{alltt}
@@ -443,16 +436,19 @@ You should replace the `\verb@powerpc@' with the name of the architecture
 for which you're building RTEMS.  Common alternatives
 are `\verb@m68k@' and `\verb@i386@' for
 the Motorola M68k and Intel x86 family of processors, respectively.
-Your should replace the `\verb@mvme2100@' with the board-support packages
-for your particular hardware
+You should replace the `\verb@mvme2100@' with the board-support packages
+for your particular hardware.
 
+If you've got lots of free time and disk space
+you can omit the \verb@--enable-rtemsbsp@ argument in which case all
+possible board-support packages for that architecture will be built.
 You can build for more than one board-support package by specifying
 more names on the command line.  For example,
 you could build for a Arcturus uCDIMM ColdFire 5282 system and an MVME-167 system
 by:
 \begin{alltt}
-cd /usr/local/rtems/source/build
-../rtems-\rtemsVersion/configure --target=m68k-rtems\rtemsVersion \verb@\@
+cd /usr/local/rtems-\rtemsVersion/build
+\ldots/rtems-\rtemsVersion/configure --target=m68k-rtems\rtemsVersion \verb@\@
       --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
       --enable-cxx --enable-rdbg --disable-tests --enable-networking \verb@\@
       --enable-posix --enable-rtemsbsp="uC5282 mvme167" \verb@\@
