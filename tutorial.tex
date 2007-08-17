@@ -779,6 +779,74 @@ export /tftpboot/epics to the IOCs.  This arrangement lets me simply copy the
 application tree, beginning at the \verb@<top>@ directory to the TFTP/NFS server area.
 \end{enumerate}
 
+\subsubsection{Motorola Processors Using MOTLOAD}
+The following `Global Environment Variables' are used.  These are set using
+the MOTLOAD {\tt gevEdit} command.
+\begin{description}
+\item[{\bf mot-script-boot}]
+These commands are run by MOTLOAD when the board is booted.  A typical example is shown below:
+\begin{alltt}
+tftpGet -c\textit{ww.ww.ww.ww} -s\textit{xx.xx.xx.xxx} -m\textit{yy.yy.yy.yy} -d/dev/enet0 -f\textit{path}
+netShut
+go
+\end{alltt}
+where {\it ww.ww.ww.ww} is the IP number of the client (VME card),
+{\it xx.xx.xx.xx} is the IP number of the TFTP server,
+{\it yy.yy.yy.yy} is the IP subnet mask, and
+{\it path} is the path to the executable image file on the TFTP server.
+
+\item[{\bf mot-/dev/enet0-cipa}]
+The client (VME card) IP address.  If this variable is not set the client address is 
+set to the value of the `-c' argument in the mot-script-boot variable.
+
+\item[{\bf mot-/dev/enet0-sipa}]
+The server IP address.  If this variable is not set the server address is 
+set to the value of the `-s' argument in the mot-script-boot variable.
+
+\item[{\bf mot-/dev/enet0-gipa}]
+The gateway IP address.  If this variable is not set the gateway IP address is 
+set to the value of the `-g' argument in the mot-script-boot variable.
+
+\item[{\bf mot-/dev/enet0-snma}]
+The subnet mask.  If this variable is not set the subnet mask is 
+set to the value of the `-m' argument in the mot-script-boot variable.
+
+\item[{\bf mot-/dev/enet0-file}]
+The name of the executable image.  If this variable is not set the name is 
+set to the value of the `-f' argument in the mot-script-boot variable.
+The name is passed as the `argv[0]' to the main() function.
+
+\item[{\bf rtems-dns-server}]
+The domain name server IP address.  If this variable is not set the server address as described above is used.
+
+\item[{\bf rtems-dns-domainname}]
+The domain name.  If this variable is not set the value compiled into the executable image is used.
+
+\item[{\bf rtems-client-name}]
+The client host name.  If this variable is not set the client address as described above is used.
+
+\item[{\bf epics-script}]
+The path to the IOC startup script on the TFTP or NFS server. 
+The value can be a simple path or be of the form
+\textit{nfsServer}:\textit{nfsExport}:\textit{nfsPath}.
+The \textit{nfsExport} component is the directory exported from the NFS server and is also used as the local mount point and as a prefix to \textit{nfsPath}.
+
+
+\item[{\bf epics-ntpserver}]
+If set, this variable should be of the form
+\textit{nfsServer}:\textit{nfsExport}:\textit{nfsMount}.
+The \textit{nfsExport} component is the directory exported from the NFS server
+and the \textit{nfsMount} is the local mount point.
+
+
+\item[{\bf epics-tz}]
+Set the value of the TZ environment variable.
+This is useful for handling daylight-savings-time changes.  A value of
+CST6CDT5,M3.2.0,M11.1.0 is appropriate for Chicago in 2007 and perhaps subsequent years.
+
+
+\end{description}
+
 \subsubsection{PC386}
 \begin{enumerate}
 \item Install an EtherBoot bootstrap PROM image obtained from
