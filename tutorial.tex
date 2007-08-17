@@ -832,7 +832,15 @@ The value can be a simple path or be of the form
 The \textit{nfsExport} component is the directory exported from the NFS server and is also used as the local mount point and as a prefix to \textit{nfsPath}.
 
 
+\item[{\bf epics-nfsmount}]
+If set, this variable should be of the form
+\textit{nfsServer}:\textit{nfsExport}:\textit{nfsMount}.
+The \textit{nfsExport} component is the directory exported from the NFS server
+and the \textit{nfsMount} is the local mount point.
+
 \item[{\bf epics-ntpserver}]
+The NTP server IP address.  If this variable is not set the server address as described above is used.
+
 If set, this variable should be of the form
 \textit{nfsServer}:\textit{nfsExport}:\textit{nfsMount}.
 The \textit{nfsExport} component is the directory exported from the NFS server
