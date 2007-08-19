@@ -841,17 +841,10 @@ and the \textit{nfsMount} is the local mount point.
 \item[{\bf epics-ntpserver}]
 The NTP server IP address.  If this variable is not set the server address as described above is used.
 
-If set, this variable should be of the form
-\textit{nfsServer}:\textit{nfsExport}:\textit{nfsMount}.
-The \textit{nfsExport} component is the directory exported from the NFS server
-and the \textit{nfsMount} is the local mount point.
-
-
 \item[{\bf epics-tz}]
 Set the value of the TZ environment variable.
 This is useful for handling daylight-savings-time changes.  A value of
 CST6CDT5,M3.2.0,M11.1.0 is appropriate for Chicago in 2007 and perhaps subsequent years.
-
 
 \end{description}
 
@@ -866,8 +859,7 @@ parameters to the IOC.
 \end{enumerate}
 
 \subsubsection{Arcturus uCDIMM ColdFire 5282}
-\begin{enumerate}
-\item Use the bootstrap {\tt setenv} command to set the EPICS and network
+Use the bootstrap {\tt setenv} command to set the EPICS and network
 configuration parameters:
 \begin{verbatim}
 IPADDR0=www.xxx.yyy.27
@@ -879,13 +871,67 @@ CMDLINE=epics/i2c/iocBoot/ioci2c/st.cmd
 SERVER=www.xxx.yyy.161
 NFSMOUNT=106.74@nfssrv:/export/nfssrv:/home/nfssrv
 \end{verbatim}
-\item Use the bootstrap {\tt tftp} command to load the IOC application image
+
+The environment variables used by the EPICS startup code are:
+\begin{description}
+\item[{\bf IPADDR0}]
+The client (Coldfire processor) IP address.
+
+\item[{\bf HOSTNAME}]
+The client host name.
+
+\item[{\bf SERVER}]
+The server IP address.  If this variable is not set the specific server
+addressses as described below must be set.
+
+\item[{\bf GATEWAY}]
+The gateway IP address.  If this variable is not set the Coldfire will be
+able to communicate only with hosts on its local network.
+
+\item[{\bf NETMASK}]
+The subnet mask.
+
+\item[{\bf BOOTFILE}]
+The name of the executable image.
+The name is passed as the `argv[0]' to the main() function.
+
+\item[{\bf NTPSERVER}]
+The NTP server IP address.  If this variable is not set the server address as described above is used.
+
+\item[{\bf NAMESERVER}]
+The domain name server IP address.  If this variable is not set the server address as described above is used.
+
+\item[{\bf DOMAIN}]
+The domain name.  If this variable is not set the value compiled into the executable image is used.
+
+\item[{\bf CMDLINE}]
+The path to the IOC startup script on the TFTP or NFS server. 
+The value can be a simple path or be of the form
+\textit{nfsServer}:\textit{nfsExport}:\textit{nfsPath}.
+The \textit{nfsExport} component is the directory exported from the NFS server and is also used as the local mount point and as a prefix to \textit{nfsPath}.
+
+\item[{\bf NFSMOUNT}]
+If set, this variable should be of the form
+\textit{nfsServer}:\textit{nfsExport}:\textit{nfsMount}.
+The \textit{nfsExport} component is the directory exported from the NFS server
+and the \textit{nfsMount} is the local mount point.
+
+\item[{\bf TZ}]
+Set the value of the TZ environment variable.
+This is useful for handling daylight-savings-time changes.  A value of
+CST6CDT5,M3.2.0,M11.1.0 is appropriate for Chicago in 2007 and perhaps subsequent years.
+
+\end{description}
+
+
+
+Use the bootstrap {\tt tftp} command to load the IOC application image
 (which may include a tar image of the in-memory filesystem contents in which case the CMDLINE will likely look something like {\tt /st.cmd} and the NFSMOUNT need not be present).
-\item Use the bootstrap {\tt goram} command to start the application or the
+
+Use the bootstrap {\tt goram} command to start the application or the
 {\tt program} command to burn the image into the on-board flash memory.  In
 the latter case you may want to also use the {\tt setenv} command to set the
 {\tt AUTOBOOT} environment variable.
-\end{enumerate}
 
 The cexp package can be used to
 incrementally load your application components.
