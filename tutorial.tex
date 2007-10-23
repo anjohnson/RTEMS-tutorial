@@ -748,6 +748,7 @@ cp -r db dbd /tftpboot/epics/norumx1
 parameter to `Y'.
 \item Use the PPCBUG NIOT command to set the network parameters.  Here are the
 parameters for a test IOC I use:
+\begin{footnotesize}
 \begin{verbatim}
 Controller LUN =00
 Device LUN     =00
@@ -758,7 +759,7 @@ Subnet IP Address Mask =255.255.252.0
 Broadcast IP Address   =192.168.11.255
 Gateway IP Address     =0.0.0.0
 Boot File Name ("NULL" for None)     =/epics/test/bin/RTEMS-mvme2100/example.boot
-Argument File Name ("NULL" for None) =/epics/test/iocBoot/iocexample/st.cmd
+Argument File Name ("NULL" for None) =www.xxx.yyy.98:/home/epics:test/iocBoot/iocexample/st.cmd
 Boot File Load Address         =001F0000
 Boot File Execution Address    =001F0000
 Boot File Execution Delay      =00000000
@@ -770,6 +771,20 @@ Trace Character Buffer Address =00000000
 BOOTP/RARP Request Control: Always/When-Needed (A/W)=W
 BOOTP/RARP Reply Update Control: Yes/No (Y/N)       =Y
 \end{verbatim}
+\end{footnotesize}
+
+\begin{itemize}
+\item The {\tt Server IP Address} is used as the address of the TFTP, NTP and domain name servers.
+\item On the TFTP server the path to the executable file is
+\begin{verbatim}
+/tftpboot/epics/test/bin/RTEMS-mvme2100/example.boot
+\end{verbatim}
+\item In the example above I have shown how to use a different address for the NFS server.  On the NFS server the path to the startup script would  be
+\begin{verbatim}
+/home/epics/test/iocBoot/iocexample/st.cmd
+\end{verbatim}
+\item The Boot File Name and Argument File Name strings can be at most 64~characters long.  You may have to shuffle files around on your servers to accomodate this restriction.
+\end{itemize}
 \item Set up your TFTP/NFS servers.  PPCBUG uses TFTP
 to load the executable image then the EPICS initialization uses
 NFS to read the EPICS startup script (the `Argument File Name' in the NIOT
