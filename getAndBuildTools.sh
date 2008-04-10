@@ -13,13 +13,13 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 #
 # Specify the versions
 #
-GCC=gcc-4.1.2
-BINUTILS=binutils-2.17
-NEWLIB=newlib-1.15.0
-BINUTILSDIFF=binutils-2.17-rtems4.7-20061021.diff
-GCCDIFF=gcc-core-4.1.2-rtems4.7-20070216.diff
-NEWLIBDIFF=newlib-1.15.0-rtems4.7-20070208.diff
-RTEMS_VERSION=4.7.1
+GCC=gcc-4.2.3
+BINUTILS=binutils-2.18
+NEWLIB=newlib-1.16.0
+BINUTILSDIFF=binutils-2.18-rtems4.9-20080211.diff
+GCCDIFF=gcc-core-4.2.3-rtems4.9-20080205.diff
+NEWLIBDIFF=newlib-1.16.0-rtems4.9-20080302.diff
+RTEMS_VERSION=4.9
 
 #
 # Where to install
@@ -31,14 +31,11 @@ PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 #
 RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/${BINUTILS}.tar.bz2
-RTEMS_BINUTILS_URL=http://ftp.gnu.mirrors.hoobly.com/gnu/binutils/binutils-2.17.tar.bz2
 RTEMS_GCC_URL=${RTEMS_SOURCES_URL}/${GCC}.tar.bz2
-RTEMS_GCC_URL=http://ftp.gnu.mirrors.hoobly.com/gnu/gcc/${GCC}/${GCC}.tar.bz2
 RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/${NEWLIB}.tar.gz
-RTEMS_NEWLIB_URL=ftp://sources.redhat.com/pub/newlib/newlib-1.15.0.tar.gz
-RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILSDIFF}
-RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCCDIFF}
-RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIBDIFF}
+RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${BINUTILSDIFF}
+RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${GCCDIFF}
+RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${NEWLIBDIFF}
 
 #
 # Uncomment one of the following depending upon which your system provides
@@ -95,7 +92,7 @@ unpackSource() {
 
     rm -rf "${GCC}"
     bzcat "${GCC}.tar.bz2" | tar xf -
-    for d in "${GCC}"*.diff
+    for d in gcc*.diff
     do
         if [ -r "$d" ]
         then

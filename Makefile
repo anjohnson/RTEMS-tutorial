@@ -5,10 +5,12 @@ all: pdf html
 
 pdf: tutorial.pdf
 
-tutorial.pdf: tutorial.tex getAndBuildTools.sh
+tutorial.pdf: tutorial.tex versions.tex
+	pdflatex tutorial.tex
+	pdflatex tutorial.tex
+
+versions.tex: getAndBuildTools.sh
 	perl makeDoc.pl >versions.tex
-	pdflatex tutorial.tex
-	pdflatex tutorial.tex
 
 html: tutorial/tutorial.html
 

@@ -30,9 +30,9 @@
 \newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
 \newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
 \newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
-\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILSDIFF}
-\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCCDIFF}
-\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIBDIFF}
+\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\rtemsVersion/\BINUTILSDIFF}
+\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\rtemsVersion/\GCCDIFF}
+\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL\rtemsVersion//\NEWLIBDIFF}
 
 \newcommand{\Bar}[1]{$\overline{\mbox{#1}}$}
 \newcommand{\RWbar}{$\mbox{R}/\overline{\mbox{W}}$}
@@ -74,10 +74,14 @@ know which of these instructions worked for you and which did not.
 
 
 \chapter{Infrastructure -- Tools and Operating System}
+If you will be using Linux as your development platform you might be able to skip this entire chapter. RPMs
+of the toolchain and RTEMS are available from
+\htmladdnormallink{www.rtems.com}{http://www.rtems.com}.
+
 \section{Create the RTEMS source and installation directories}
 There should be at least 300 Mbytes of space available on the drive
 where these directories are located.
-I used {\tt /usr/local/rtems/rtems\rtemsVersion} as the
+I used {\tt /usr/local/rtems/rtems-\rtemsVersion} as the
 installation target directory.
 The location of the RTEMS source is not critical.  This document assumes
 that the root of the RTEMs source tree is {\tt /usr/local/rtems/source}.
@@ -87,21 +91,21 @@ and the results of the build installed:
 \begin{alltt}
 /usr/local/rtems/source
 /usr/local/rtems/source/tools
-/usr/local/rtems/rtems\rtemsVersion
+/usr/local/rtems/rtems-\rtemsVersion
 \end{alltt}
 
 \section{Add the directory containing the tools to your shell search path}
 The following sections assume that the directory into which
 you will install the cross-development tools
-({\tt /usr/local/rtems/rtems\rtemsVersion/bin}) is on your shell search path.
+({\tt /usr/local/rtems/rtems-\rtemsVersion/bin}) is on your shell search path.
 For shells
 like sh, bash, zsh and ksh you can to this with
 \begin{alltt}
-PATH="$PATH:/usr/local/rtems/rtems\rtemsVersion/bin"
+PATH="$PATH:/usr/local/rtems/rtems-\rtemsVersion/bin"
 \end{alltt}
 For shells like csh and tcsh you can
 \begin{alltt}
-set path = ( $path /usr/local/rtems/rtems\rtemsVersion/bin )
+set path = ( $path /usr/local/rtems/rtems-\rtemsVersion/bin )
 \end{alltt}
 
 
@@ -249,7 +253,7 @@ cd build
 \item Configure the tools.
 \begin{alltt}
 ../\BINUTILS/configure --target=powerpc-rtems\rtemsVersion \verb@\@
-             --prefix=/usr/local/rtems/rtems\rtemsVersion
+             --prefix=/usr/local/rtems/rtems-\rtemsVersion
 \end{alltt}
 You should replace the `\verb@powerpc@' with the name of the architecture
 for which you're
@@ -283,7 +287,7 @@ cd build
 \item Configure the compiler and libraries.
 \begin{alltt}
 ../\GCC/configure --target=powerpc-rtems\rtemsVersion \verb@\@
-            --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
+            --prefix=/usr/local/rtems/rtems-\rtemsVersion \verb@\@
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \verb@\@
             --with-system-zlib --disable-nls \verb@\@
             --enable-version-specific-runtime-libs \verb@\@
@@ -312,21 +316,21 @@ cd ..
 
 The source releases are available at
 
-\begin{verbatim}
+\begin{alltt}
 http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2
-\end{verbatim}
+\end{alltt}
 
 
 The compressed {\it tar} archive in this directory can be downloaded using a web browser or a command-line program such as \verb@curl@ or \verb@wget@:
 {\small
 \begin{alltt}
 \verb@curl --remote-name@
-\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2
+\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems\rtemsVersion.tar.bz2
 \end{alltt}
 or
 \begin{alltt}
 \verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems-\rtemsVersion.tar.bz2
+\hspace{0.2in}http://www.rtems.com/ftp/pub/rtems/\rtemsVersion/rtems\rtemsVersion.tar.bz2
 \end{alltt}
 }
 Depending on the type of firewall between your machine and the OAR FTP server
@@ -428,7 +432,7 @@ Configure RTEMS for your target architecture:
 \begin{alltt}
 cd /usr/local/rtems-\rtemsVersion/build
 \ldots/rtems-\rtemsVersion/configure --target=powerpc-rtems\rtemsVersion \verb@\@
-  --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
+  --prefix=/usr/local/rtems/rtems-\rtemsVersion \verb@\@
   --enable-cxx --enable-rdbg --disable-tests --enable-networking \verb@\@
   --enable-posix --enable-rtemsbsp=mvme2100 \verb@\@
 \end{alltt}
@@ -449,7 +453,7 @@ by:
 \begin{alltt}
 cd /usr/local/rtems-\rtemsVersion/build
 \ldots/rtems-\rtemsVersion/configure --target=m68k-rtems\rtemsVersion \verb@\@
-      --prefix=/usr/local/rtems/rtems\rtemsVersion \verb@\@
+      --prefix=/usr/local/rtems/rtems-\rtemsVersion \verb@\@
       --enable-cxx --enable-rdbg --disable-tests --enable-networking \verb@\@
       --enable-posix --enable-rtemsbsp="uC5282 mvme167" \verb@\@
 \end{alltt}
@@ -468,11 +472,7 @@ The EPICS IOC shell uses the the libtecla or GNU readline package to provide com
 While the IOC shell can be compiled without these capabilities I think they're important enough to warrant
 making the effort to download and install the extra packages.
 GNU readline is more well-tested, but libtecla does not bring along
-the problems associated with the GNU Public License.
-
-EPICS can use either TFTP or NFS for remote file access.
-NFS provides considerably more flexibility so it's a good
-idea to install this add-on package as well.
+the issues associated with the GNU Public License.
 
 \subsection{Download the add-on package sources}
 The latest versions of these files are in
@@ -513,7 +513,7 @@ rtems-addon-packages-\rtemsVersion
 The makefiles in the RTEMS packages use the \verb@RTEMS_MAKEFILE_PATH@ environment variable to determine the
 target architecture and board-support package.  For example,
 \begin{alltt}
-export RTEMS_MAKEFILE_PATH=/usr/local/rtems/rtems\rtemsVersion/powerpc-rtems\rtemsVersion/mvme2100
+export RTEMS_MAKEFILE_PATH=/usr/local/rtems/rtems-\rtemsVersion/powerpc-rtems\rtemsVersion/mvme2100
 \end{alltt}
 will select the Motorola Power PC architecture and the RTEMS mvme2100 board-support package.
 
@@ -546,40 +546,37 @@ not be repeated here.  Make sure you get the R3.14.9 or later release of EPICS.
 You must first let the EPICS Makefiles know where you've installed
 the RTEMS development tools and libraries.  The default location is
 \begin{alltt}
-/usr/local/rtems/rtems\rtemsVersion
+/usr/local/rtems/rtems-\rtemsVersion
 \end{alltt}
 If you've installed the RTEMS tools and libraries in a different location and
 have not created a symbolic link from
 \begin{alltt}
-/usr/local/rtems/rtems\rtemsVersion
+/usr/local/rtems/rtems-\rtemsVersion
 \end{alltt}
 to wherever you've installed RTEMS you need to edit the EPICS configuration
 file
 \begin{verbatim}
-configure/RELEASE
+configure/os/CONFIG_SITE.Common.RTEMS
 \end{verbatim}
 In this file you'll find the lines
 \begin{alltt}
-RTEMS_BASE=/usr/local/rtems/rtems\rtemsVersion
+RTEMS_BASE=/usr/local/rtems/rtems-\rtemsVersion
 RTEMS_VERSION=\rtemsVersion
 \end{alltt}
 while will have to be changed to reflect the directory where you installed RTEMS.
 
-If you installed the RTEMS readline or tecla add-on packages you can edit
-your EPICS local configuration file (\verb@configure/os/CONFIG_SITE.Common.RTEMS@)
-and change the \verb@EPICSCOMMANDLINE_LIBRARY@ definition from \verb@EPICS@ to
+If you installed the RTEMS readline or tecla add-on packages you can
+change the \verb@EPICSCOMMANDLINE_LIBRARY@ definition from \verb@EPICS@ to
 \verb@READLINE@ or \verb@LIBTECLA@, respectively.
 If you don't want to use NFS to access remote files you can add
 \begin{verbatim}
 OP_SYS_CFLAGS += -DOMIT_NFS_SUPPORT
 \end{verbatim}
-to this file.
 
 \section{Specify the network domain}
 If you're using neither DHCP/BOOTP not non-volatile RAM to provide network
-configuration information to your RTEMS IOCs you should edit
-your EPICS local configuration file (\verb@configure/CONFIG_SITE.Common.RTEMS@)
-and specify your Internet Domain Name as:
+configuration information to your RTEMS IOCs you should
+specify your Internet Domain Name as:
 \begin{verbatim}
 OP_SYS_CFLAGS += -DRTEMS_NETWORK_CONFIG_DNS_DOMAINNAME=your.dnsname.here
 \end{verbatim}
@@ -599,7 +596,7 @@ for instructions on selecting a network interface card when building your
 EPICS application.
 
 \section{Specify the target architectures}
-The \verb@configure/CONFIG_SITE@ file specifies the target
+The \verb@configure/CONFIG_SITE.<host_architecture>.Common@ file specifies the target
 architectures and board support packages to be supported.
 For example, I regularly build for a single target:
 \begin{verbatim}
@@ -615,13 +612,6 @@ The format of the target architecture names is {\tt RTEMS-}{\it bspname}, where
 be used, and
 {\it bspname} is the name of the RTEMS target architecture and
 board support package used back in section~\ref{RTEMS_BSP_CONFIG}.
-
-If you build EPICS base on multiple host architectures and want to build
-RTEMS target support on only one of those host architectures the target
-specification can instead be performed in 
-\begin{alltt}
-configure/os/CONFIG_SITE.<{\it{hostArch}}>.Common/CONFIG_SITE
-\end{alltt}
 
 
 \section{Build EPICS base}
