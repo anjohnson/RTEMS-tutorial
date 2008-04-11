@@ -23,6 +23,11 @@ install: html pdf
 	echo "Please unpack $(HOME)/tutorial.tar.bz2 in $(WEB_BASE)   (web server)"
 
 clean:
-	rm -f *.dvi *.log *.aux *.bbl *.blg *.lof *.lot *.toc *.out
+	rm -f *.dvi *.log *.aux *.bbl *.blg *.lof *.lot *.toc *.out *.zip
+
+realclean: clean
 	rm -f tutorial.ps tutorial.pdf
 	rm -rf tutorial
+
+icms: all clean
+	zip -r tutorial.zip .
