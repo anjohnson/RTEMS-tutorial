@@ -122,14 +122,16 @@ build() {
         rm -rf build
         mkdir build
         cd build
-        "${SHELL}" "../${BINUTILS}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
+        "${SHELL}" "../${BINUTILS}/configure" \
+                "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
         ${MAKE} -w all install
         cd ..
 
         rm -rf build
         mkdir build
         cd build
-       "${SHELL}" "../${GCC}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
+       "${SHELL}" "../${GCC}/configure" \
+            "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \
             --with-system-zlib --disable-nls \
             --enable-version-specific-runtime-libs \
