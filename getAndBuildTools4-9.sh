@@ -29,13 +29,13 @@ PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 #
 # Where to get the GNU tools
 #
-RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES
+RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_VERSION}
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/${BINUTILS}.tar.bz2
 RTEMS_GCC_URL=${RTEMS_SOURCES_URL}/${GCC}.tar.bz2
 RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/${NEWLIB}.tar.gz
-RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${BINUTILSDIFF}
-RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${GCCDIFF}
-RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${RTEMS_VERSION}/${NEWLIBDIFF}
+RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILSDIFF}
+RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCCDIFF}
+RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIBDIFF}
 
 #
 # Uncomment one of the following depending upon which your system provides
@@ -122,14 +122,16 @@ build() {
         rm -rf build
         mkdir build
         cd build
-        "${SHELL}" "../${BINUTILS}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
+        "${SHELL}" "../${BINUTILS}/configure" \
+                "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
         ${MAKE} -w all install
         cd ..
 
         rm -rf build
         mkdir build
         cd build
-       "${SHELL}" "../${GCC}/configure" "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
+       "${SHELL}" "../${GCC}/configure" \
+            "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
             --with-gnu-as --with-gnu-ld --with-newlib --verbose \
             --with-system-zlib --disable-nls \
             --enable-version-specific-runtime-libs \
