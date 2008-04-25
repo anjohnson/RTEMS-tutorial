@@ -30,9 +30,9 @@
 \newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
 \newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
 \newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
-\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\rtemsVersion/\BINUTILSDIFF}
-\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\rtemsVersion/\GCCDIFF}
-\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL\rtemsVersion//\NEWLIBDIFF}
+\newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILSDIFF}
+\newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCCDIFF}
+\newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIBDIFF}
 
 \newcommand{\Bar}[1]{$\overline{\mbox{#1}}$}
 \newcommand{\RWbar}{$\mbox{R}/\overline{\mbox{W}}$}
@@ -595,7 +595,7 @@ src/RTEMS/base/rtems_netconfig.c
 for instructions on selecting a network interface card when building your
 EPICS application.  
 Most RTEMS board support packages support only a single network interface and
-need no changes to rtems_netconfig.c.
+need no changes to rtems\_netconfig.c.
 
 \section{Specify the target architectures}
 The \verb@configure/CONFIG_SITE.<host_architecture>.Common@ file specifies the target

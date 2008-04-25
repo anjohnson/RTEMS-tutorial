@@ -7,6 +7,7 @@ sub getParm {
     my $command, $val;
     $command="grep '^$shellName=' getAndBuildTools.sh";
     $val=`$command`;
+    $val =~ s/\${RTEMS_VERSION}/\\rtemsVersion/;
     $val =~ s/.*=//;
     $val =~ s/_/\\_/g;
     $val =~ s/[\n \t]*$//;
