@@ -593,7 +593,9 @@ If not, see the comments in
 src/RTEMS/base/rtems_netconfig.c
 \end{alltt}
 for instructions on selecting a network interface card when building your
-EPICS application.
+EPICS application.  
+Most RTEMS board support packages support only a single network interface and
+need no changes to rtems_netconfig.c.
 
 \section{Specify the target architectures}
 The \verb@configure/CONFIG_SITE.<host_architecture>.Common@ file specifies the target
