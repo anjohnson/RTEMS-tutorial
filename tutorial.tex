@@ -934,6 +934,12 @@ CST6CDT5,M3.2.0,M11.1.0 is appropriate for Chicago in 2007 and perhaps subsequen
 
 Use the bootstrap {\tt tftp} command to load the IOC application image
 (which may include a tar image of the in-memory filesystem contents in which case the CMDLINE will likely look something like {\tt /st.cmd} and the NFSMOUNT need not be present).
+You'll need to run a TFTP client on your host machine to transfer the
+file.  An example using {\it curl} is:
+\begin{quote}
+curl -T bin/RTEMS-uC5282/example.boot tftp://192.168.1.93
+\end{quote}
+where 192.168.1.93 is the IP address of the ColdFire target.
 
 Use the bootstrap {\tt goram} command to start the application or the
 {\tt program} command to burn the image into the on-board flash memory.  In
