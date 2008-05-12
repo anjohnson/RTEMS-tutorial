@@ -802,6 +802,16 @@ where {\it ww.ww.ww.ww} is the IP number of the client (VME card),
 {\it yy.yy.yy.yy} is the IP subnet mask, and
 {\it path} is the path to the executable image file on the TFTP server.
 
+The standard MOTLOAD download buffer may be too small to hold your application.  If this is the
+case you can call malloc to allocate a larger buffer and then use the -a option to pass the address of this buffer to the tftpGet and go commands:
+\begin{alltt}
+dla=malloc 0x280000
+tftpGet -c\textit{ww.ww.ww.ww} -s\textit{xx.xx.xx.xxx} -m\textit{yy.yy.yy.yy} -d/dev/enet0 -f\textit{path} -adla
+netShut
+go -adla
+\end{alltt}
+
+
 \item[{\bf mot-/dev/enet0-cipa}]
 The client (VME card) IP address.  If this variable is not set the client address is 
 set to the value of the `-c' argument in the mot-script-boot variable.
