@@ -45,11 +45,11 @@ GET_COMMAND="curl --remote-name"
 #GET_COMMAND="wget --no-directories --retr-symlinks "
 
 #
-# Allow environment to override some programs
+# Solaris likely needs gmake and /bin/bash here.
 #
 MAKE="${MAKE:-make}"
 export MAKE
-SHELL="${SHELL:-/bin/sh}"
+SHELL=/bin/sh
 export SHELL
 
 #
