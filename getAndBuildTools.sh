@@ -13,12 +13,12 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 #
 # Specify the versions
 #
-GCC=gcc-4.2.3
-BINUTILS=binutils-2.18
-NEWLIB=newlib-1.16.0
+GCC=4.3.2
+BINUTILS=2.18
+NEWLIB=1.16.0
 BINUTILSDIFF=binutils-2.18-rtems4.9-20080211.diff
-GCCDIFF=gcc-core-4.2.3-rtems4.9-20080205.diff
-NEWLIBDIFF=newlib-1.16.0-rtems4.9-20080302.diff
+GCCDIFF=gcc-core-4.3.2-rtems4.10-20080828.diff
+NEWLIBDIFF=newlib-1.16.0-rtems4.10-20080827.diff
 RTEMS_VERSION=4.9
 
 #
@@ -30,9 +30,10 @@ PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 # Where to get the GNU tools
 #
 RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_VERSION}
-RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/${BINUTILS}.tar.bz2
-RTEMS_GCC_URL=${RTEMS_SOURCES_URL}/${GCC}.tar.bz2
-RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/${NEWLIB}.tar.gz
+RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/binutils-${BINUTILS}.tar.bz2
+RTEMS_GCC_CORE_URL=${RTEMS_SOURCES_URL}/gcc-core-${GCC}.tar.bz2
+RTEMS_GCC_GPP_URL=${RTEMS_SOURCES_URL}/gcc-g++-${GCC}.tar.bz2
+RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/newlib-${NEWLIB}.tar.gz
 RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILSDIFF}
 RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCCDIFF}
 RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIBDIFF}
@@ -64,7 +65,8 @@ getSource() {
     then
         ${GET_COMMAND} "${RTEMS_BINUTILS_DIFF_URL}"
     fi
-    ${GET_COMMAND}  "${RTEMS_GCC_URL}"
+    ${GET_COMMAND} "${RTEMS_GCC_CORE_URL}"
+    ${GET_COMMAND} "${RTEMS_GCC_GPP_URL}"
     if [ -n "$GCCDIFF" ]
     then
         ${GET_COMMAND} "${RTEMS_GCC_DIFF_URL}"
@@ -80,36 +82,37 @@ getSource() {
 # Unpack the source
 #
 unpackSource() {
-    rm -rf "{$BINUTILS}"
-    bzcat "${BINUTILS}.tar.bz2" | tar xf -
-    for d in "${BINUTILS}"*.diff
+    rm -rf "binutils-${BINUTILS}"
+    bzcat "binutils-${BINUTILS}.tar.bz2" | tar xf -
+    for d in "binutils-${BINUTILS}"*.diff
     do
         if [ -r "$d" ]
         then
-            cat "$d" | (cd "${BINUTILS}" ; patch -p1)
+            cat "$d" | (cd "binutils-${BINUTILS}" ; patch -p1)
         fi
     done
 
-    rm -rf "${GCC}"
-    bzcat "${GCC}.tar.bz2" | tar xf -
+    rm -rf "gcc-${GCC}"
+    bzcat "gcc-core-${GCC}.tar.bz2" | tar xf -
+    bzcat "gcc-g++-${GCC}.tar.bz2" | tar xf -
     for d in gcc*.diff
     do
         if [ -r "$d" ]
         then
-            cat "$d" | (cd "${GCC}" ; patch -p1)
+            cat "$d" | (cd "gcc-${GCC}" ; patch -p1)
         fi
     done
 
-    rm -rf "${NEWLIB}"
-    zcat <"${NEWLIB}.tar.gz" | tar xf -
-    for d in "${NEWLIB}"*.diff
+    rm -rf "newlib-${NEWLIB}"
+    zcat <"newlib-${NEWLIB}.tar.gz" | tar xf -
+    for d in "newlib-${NEWLIB}"*.diff
     do
         if [ -r "$d" ]
         then
-            cat "$d" | (cd "${NEWLIB}" ; patch -p1)
+            cat "$d" | (cd "newlib-${NEWLIB}" ; patch -p1)
         fi
     done
-    (cd "${GCC}" ; ln -s "../${NEWLIB}/newlib" newlib)
+    (cd "gcc-${GCC}" ; ln -s "../newlib-${NEWLIB}/newlib" newlib)
 }
 
 #
@@ -122,21 +125,31 @@ build() {
         rm -rf build
         mkdir build
         cd build
-        "${SHELL}" "../${BINUTILS}/configure" \
-                "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}"
+        "${SHELL}" "../binutils-${BINUTILS}/configure" \
+            "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
+            --verbose --disable-nls \
+            --without-included-gettext \
+            --disable-win32-registry \
+            --disable-werror 
         ${MAKE} -w all install
         cd ..
 
         rm -rf build
         mkdir build
         cd build
-       "${SHELL}" "../${GCC}/configure" \
+       "${SHELL}" "../gcc-${GCC}/configure" \
             "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
-            --with-gnu-as --with-gnu-ld --with-newlib --verbose \
-            --with-system-zlib --disable-nls \
+            --disable-libstdcxx-pch \
+            --with-gnu-as --with-gnu-ld --verbose \
+            --with-newlib \
+            --with-system-zlib \
+            --disable-nls --without-included-gettext \
+            --disable-win32-registry \
             --enable-version-specific-runtime-libs \
-            --enable-threads=rtems \
-            --enable-languages=c,c++ 
+            --enable-threads \
+            --enable-newlib-io-c99-formats \
+            --enable-languages="c,c++" \
+            --with-gmp="${PREFIX}" --with-mpfr="${PREFIX}"
         ${MAKE} -w all
         ${MAKE} -w install
         cd ..
@@ -151,4 +164,5 @@ build() {
 set -ex
 getSource
 unpackSource
+export LD_LIBRARY_PATH="${PREFIX}/lib"
 build

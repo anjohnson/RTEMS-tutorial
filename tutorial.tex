@@ -27,9 +27,10 @@
 %
 % Where to get the GNU tools
 %
-\newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/\BINUTILS.tar.bz2}
-\newcommand{\RTEMSGCCURL}{\RTEMSSOURCEURL/\GCC.tar.bz2}
-\newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/\NEWLIB.tar.gz}
+\newcommand{\RTEMSBINUTILSURL}{\RTEMSSOURCEURL/binutils-\BINUTILS.tar.bz2}
+\newcommand{\RTEMSGCCCOREURL}{\RTEMSSOURCEURL/gcc-core-\GCC.tar.bz2}
+\newcommand{\RTEMSGCCGPPURL}{\RTEMSSOURCEURL/gcc-g++-\GCC.tar.bz2}
+\newcommand{\RTEMSNEWLIBURL}{\RTEMSSOURCEURL/newlib-\NEWLIB.tar.gz}
 \newcommand{\RTEMSBINUTILSDIFFURL}{\RTEMSSOURCEURL/\BINUTILSDIFF}
 \newcommand{\RTEMSGCCDIFFURL}{\RTEMSSOURCEURL/\GCCDIFF}
 \newcommand{\RTEMSNEWLIBDIFFURL}{\RTEMSSOURCEURL/\NEWLIBDIFF}
@@ -145,8 +146,6 @@ The source for the GNU tools should be obtained from
 the On-line Applications Research (OAR) FTP server since
 that server provides any RTEMS-specific patches that may have to be
 applied before the tools can be built. 
-GNU toolchain components gcc-4.1.0, binutils-2.17 and newlib-1.14.0 are
-known to require no patches!
 
 The files in the OAR FTP server directory
 {\small \RTEMSSOURCEURL}
@@ -158,7 +157,9 @@ command examples have been split to help them fit on the page):
 curl --remote-name
 \hspace{0.2in} \RTEMSBINUTILSURL
 curl --remote-name
-\hspace{0.2in} \RTEMSGCCURL
+\hspace{0.2in} \RTEMSGCCCOREURL
+curl --remote-name
+\hspace{0.2in} \RTEMSGCCGPPURL
 curl --remote-name
 \hspace{0.2in} \RTEMSNEWLIBURL
 \ifthenelse{\equal{}{\BINUTILSDIFF}}{}{curl --remote-name
@@ -173,9 +174,9 @@ or
 \verb@wget --passive-ftp --no-directories --retr-symlinks@
 \hspace{0.2in} \RTEMSBINUTILSURL
 \verb@wget --passive-ftp --no-directories --retr-symlinks@
-\hspace{0.2in} \RTEMSGCCURL
+\hspace{0.2in} \RTEMSGCCCOREURL
+\ldots
 \end{alltt}
-...
 }
 
 Depending on the type of firewall between your machine and the OAR FTP server
@@ -187,15 +188,16 @@ you may need to remove the \verb@--passive-ftp@ option from the {\tt wget} comma
 The following commands will extract the GNU tool sources from the
 downloaded tar archive files.
 \begin{alltt}
-bzcat \BINUTILS.tar.bz2 | tar xf -
-bzcat \GCC.tar.bz2 | tar xf -
-zcat <\NEWLIB.tar.gz | tar xf -
+bzcat binutils-\BINUTILS.tar.bz2 | tar xf -
+bzcat gcc-core-\GCC.tar.bz2 | tar xf -
+bzcat gcc-g++-\GCC.tar.bz2 | tar xf -
+zcat <newlib-\NEWLIB.tar.gz | tar xf -
 \end{alltt}
 
 To build the newlib libraries needed by RTEMS you must make a symbolic
 link to the newlib source directory from the gcc source directory.
 \begin{alltt}
-cd \GCC
+cd gcc-\GCC
 rm -rf newlib
 ln -s ../\NEWLIB/newlib newlib
 cd ..
@@ -209,7 +211,7 @@ the tools can be compiled.
 \ifthenelse{\equal{}{\BINUTILSDIFF}}{}{
 Here is how the patches can be applied to the binutils sources:
 \begin{alltt}
-cd \BINUTILS \newline
+cd binutils-\BINUTILS \newline
 patch -p1 <../\BINUTILSDIFF \newline
 cd .. \newline
 \end{alltt}
@@ -218,7 +220,7 @@ cd .. \newline
 \ifthenelse{\equal{}{\GCCDIFF}}{}{
 Here is how the patches can be applied to the gcc sources:
 \begin{alltt}
-cd \GCC \newline
+cd gcc-\GCC \newline
 patch -p1 <../\GCCDIFF \newline
 cd .. \newline
 \end{alltt}
@@ -227,7 +229,7 @@ cd .. \newline
 \ifthenelse{\equal{}{\NEWLIBDIFF}}{}{
 Here is how the patches can be applied to the newlib sources:
 \begin{alltt}
-cd \NEWLIB \newline
+cd newlib-\NEWLIB \newline
 patch -p1 <../\NEWLIBDIFF \newline
 cd .. \newline
 \end{alltt}
@@ -252,8 +254,13 @@ cd build
 
 \item Configure the tools.
 \begin{alltt}
-../\BINUTILS/configure --target=powerpc-rtems\rtemsVersion \verb@\@
-             --prefix=/usr/local/rtems/rtems-\rtemsVersion
+../binutils-\BINUTILS/configure --target=powerpc-rtems\rtemsVersion \verb@\@
+             --prefix=/usr/local/rtems/rtems-\rtemsVersion \verb@\@
+             --verbose --disable-nls \verb@\@
+             --without-included-gettext \verb@\@
+             --disable-win32-registry \verb@\@
+             --disable-werror 
+
 \end{alltt}
 You should replace the `\verb@powerpc@' with the name of the architecture
 for which you're
@@ -288,11 +295,17 @@ cd build
 \begin{alltt}
 ../\GCC/configure --target=powerpc-rtems\rtemsVersion \verb@\@
             --prefix=/usr/local/rtems/rtems-\rtemsVersion \verb@\@
-            --with-gnu-as --with-gnu-ld --with-newlib --verbose \verb@\@
-            --with-system-zlib --disable-nls \verb@\@
+            --disable-libstdcxx-pch \verb@\@
+            --with-gnu-as --with-gnu-ld --verbose \verb@\@
+            --with-newlib \verb@\@
+            --with-system-zlib \verb@\@
+            --disable-nls --without-included-gettext \verb@\@
+            --disable-win32-registry \verb@\@
             --enable-version-specific-runtime-libs \verb@\@
-            --enable-threads=rtems \verb@\@
-            --enable-languages=c,c++ 
+            --enable-threads \verb@\@
+            --enable-newlib-io-c99-formats \verb@\@
+            --enable-languages="c,c++"
+
 \end{alltt}
 You should again replace the '\verb@powerpc@' with the name of the architecture
 for which you're
