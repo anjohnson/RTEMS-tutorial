@@ -16,9 +16,11 @@ ARCHS="${ARCHS:-m68k i386 powerpc}"
 GCC=4.3.2
 BINUTILS=2.18
 NEWLIB=1.16.0
+GDB=6.8
 BINUTILSDIFF=binutils-2.18-rtems4.9-20080211.diff
-GCCDIFF=gcc-core-4.3.2-rtems4.10-20080828.diff
-NEWLIBDIFF=newlib-1.16.0-rtems4.10-20080827.diff
+GCCDIFF=gcc-core-4.3.2-rtems4.9-20080828.diff
+NEWLIBDIFF=newlib-1.16.0-rtems4.9-20080827.diff
+GDBDIFF=gdb-6.8-rtems4.9-20080917.diff
 RTEMS_VERSION=4.9
 
 #
@@ -34,9 +36,11 @@ RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/binutils-${BINUTILS}.tar.bz2
 RTEMS_GCC_CORE_URL=${RTEMS_SOURCES_URL}/gcc-core-${GCC}.tar.bz2
 RTEMS_GCC_GPP_URL=${RTEMS_SOURCES_URL}/gcc-g++-${GCC}.tar.bz2
 RTEMS_NEWLIB_URL=${RTEMS_SOURCES_URL}/newlib-${NEWLIB}.tar.gz
+RTEMS_GDB_URL=${RTEMS_SOURCES_URL}/gdb-${GDB}.tar.bz2
 RTEMS_BINUTILS_DIFF_URL=${RTEMS_SOURCES_URL}/${BINUTILSDIFF}
 RTEMS_GCC_DIFF_URL=${RTEMS_SOURCES_URL}/${GCCDIFF}
 RTEMS_NEWLIB_DIFF_URL=${RTEMS_SOURCES_URL}/${NEWLIBDIFF}
+RTEMS_GDB_DIFF_URL=${RTEMS_SOURCES_URL}/${GDBDIFF}
 
 #
 # Uncomment one of the following depending upon which your system provides
@@ -76,6 +80,11 @@ getSource() {
     then
         ${GET_COMMAND} "${RTEMS_NEWLIB_DIFF_URL}"
     fi
+     ${GET_COMMAND} "${RTEMS_GDB_URL}"
+    if [ -n "$GDBDIFF" ]
+    then
+        ${GET_COMMAND} "${RTEMS_GDB_DIFF_URL}"
+    fi
 }
 
 #
@@ -113,6 +122,16 @@ unpackSource() {
         fi
     done
     (cd "gcc-${GCC}" ; ln -s "../newlib-${NEWLIB}/newlib" newlib)
+
+    rm -rf "gdb-${GDB}"
+    bzcat <"gdb-${GDB}.tar.bz2" | tar xf -
+    for d in "gdb-${GDB}"*.diff
+    do
+        if [ -r "$d" ]
+        then
+            cat "$d" | (cd "gdb-${GDB}" ; patch -p1)
+        fi
+    done
 }
 
 #
@@ -150,6 +169,22 @@ build() {
             --enable-newlib-io-c99-formats \
             --enable-languages="c,c++" \
             --with-gmp="${PREFIX}" --with-mpfr="${PREFIX}"
+        ${MAKE} -w all
+        ${MAKE} -w install
+        cd ..
+
+        rm -rf build
+        mkdir build
+        cd build
+       "${SHELL}" "../gdb-${GDB}/configure" \
+            "--target=${arch}-rtems${RTEMS_VERSION}" "--prefix=${PREFIX}" \
+            --verbose --disable-nls --without-included-gettext \
+            --disable-win32-registry \
+            --enable-version-specific-runtime-libs \
+            --disable-win32-registry \
+            --disable-werror \
+            --enable-sim \
+            --with-expat
         ${MAKE} -w all
         ${MAKE} -w install
         cd ..
