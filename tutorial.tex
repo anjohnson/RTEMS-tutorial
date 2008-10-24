@@ -549,6 +549,40 @@ The actual method of loading an application into a target processor is
 hardware-dependent.  Section~\ref{exampleApp} describes a method which
 may be used with RTEMS mvme2100 targets.
 
+\section{Extended BSP routines}
+Some additional support routines are necessary to
+use EPICS/RTEMS with PowerPC VME cards such as the MVME2100 and MVME3100.
+
+\begin{enumerate}
+\item Download the libbspExt sources:
+\begin{alltt}
+wget http://www.slac.stanford.edu/~strauman/rtems/rtems_libbspExt_1.3.beta.tgz 
+\end{alltt}
+
+\item Unpack 
+\begin{alltt}
+cd /usr/local/rtems/source 
+tar -xzf rtems_libbspExt_1.3.beta.tgz 
+\end{alltt}
+
+\item Patch 2 files (add support for mvme2100 and correct install location) 
+\begin{alltt}
+cd rtems_libbspExt_1.3.beta 
+patch -p1 < libbspExt-1.3.beta.patch 
+\end{alltt}
+  
+\item Set the \verb@RTEMS_MAKEFILE_PATH@ environment variable 
+\begin{alltt}
+export RTEMS_MAKEFILE_PATH=/usr/local/rtems/rtems-4.9/powerpc-rtems4.9/mvme2100 
+\end{alltt}
+
+\item Build and install the add-on packages 
+\begin{alltt}
+ make 
+ make install 
+\end{alltt}
+\end{enumerate}
+
 \chapter{EPICS Base}
 The first step in building an EPICS application is to download the EPICS
 base source from the APS server and unpack it.   The details on how

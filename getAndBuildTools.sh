@@ -21,7 +21,8 @@ BINUTILSDIFF=binutils-2.18-rtems4.9-20080211.diff
 GCCDIFF=gcc-core-4.3.2-rtems4.9-20080828.diff
 NEWLIBDIFF=newlib-1.16.0-rtems4.9-20080827.diff
 GDBDIFF=gdb-6.8-rtems4.9-20080917.diff
-RTEMS_VERSION=4.9
+RTEMS_BASE_VERSION=4.9
+RTEMS_VERSION=4.9.1
 
 #
 # Where to install
@@ -31,7 +32,7 @@ PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 #
 # Where to get the GNU tools
 #
-RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_VERSION}
+RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_BASE_VERSION}
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/binutils-${BINUTILS}.tar.bz2
 RTEMS_GCC_CORE_URL=${RTEMS_SOURCES_URL}/gcc-core-${GCC}.tar.bz2
 RTEMS_GCC_GPP_URL=${RTEMS_SOURCES_URL}/gcc-g++-${GCC}.tar.bz2

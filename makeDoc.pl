@@ -8,6 +8,7 @@ sub getParm {
     $command="grep '^$shellName=' getAndBuildTools.sh";
     $val=`$command`;
     $val =~ s/\${RTEMS_VERSION}/\\rtemsVersion/;
+    $val =~ s/\${RTEMS_BASE_VERSION}/\\rtemsBaseVersion/;
     $val =~ s/.*=//;
     $val =~ s/_/\\_/g;
     $val =~ s/[\n \t]*$//;
@@ -32,4 +33,5 @@ print "\\newcommand{\\BINUTILSDIFF}{$BINUTILSDIFF}\n";
 print "\\newcommand{\\GCCDIFF}{$GCCDIFF}\n";
 print "\\newcommand{\\NEWLIBDIFF}{$NEWLIBDIFF}\n";
 print "\\newcommand{\\rtemsVersion}{$RTEMS_VERSION}\n";
+print "\\newcommand{\\rtemsBaseVersion}{$RTEMS_BASE_VERSION}\n";
 
