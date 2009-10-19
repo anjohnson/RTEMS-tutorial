@@ -9,14 +9,11 @@ tutorial.pdf: tutorial.tex versions.tex
 	pdflatex tutorial.tex
 	pdflatex tutorial.tex
 
-versions.tex: getAndBuildTools.sh
-	perl makeDoc.pl >versions.tex
-
 html: tutorial/tutorial.html
 
 tutorial/tutorial.html: tutorial.pdf
 	sh makehtml.sh
-	cp tutorial.pdf getAndBuildTools.sh tutorial
+	cp tutorial.pdf tutorial
 
 install: html pdf
 	tar cfj ~/tutorial.tar.bz2 tutorial
