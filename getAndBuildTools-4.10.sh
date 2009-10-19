@@ -8,7 +8,7 @@
 # Specify the architectures for which the tools are to be built
 # To build for single target: ARCHS="m68k"
 #
-ARCHS="${ARCHS:-i386 powerpc m68k}"
+ARCHS="${ARCHS:-m68k i386 powerpc}"
 
 #
 # Specify the versions
@@ -21,6 +21,7 @@ GDB=7.0
 GCCDIFF=gcc-core-4.4.2-rtems4.10-20091015.diff
 NEWLIBDIFF=newlib-1.17.0-rtems4.10-20091009.diff
 GDBDIFF=gdb-7.0-rtems4.10-20091007.diff
+RTEMS_BASE_VERSION=4.10
 RTEMS_VERSION=4.10
 
 #
@@ -31,7 +32,7 @@ PREFIX="${PREFIX:-/usr/local/rtems/rtems-${RTEMS_VERSION}}"
 #
 # Where to get the GNU tools
 #
-RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_VERSION}
+RTEMS_SOURCES_URL=ftp://www.rtems.com/pub/rtems/SOURCES/${RTEMS_BASE_VERSION}
 RTEMS_BINUTILS_URL=${RTEMS_SOURCES_URL}/binutils-${BINUTILS}.tar.bz2
 RTEMS_GCC_CORE_URL=${RTEMS_SOURCES_URL}/gcc-core-${GCC}.tar.bz2
 RTEMS_GCC_GPP_URL=${RTEMS_SOURCES_URL}/gcc-g++-${GCC}.tar.bz2

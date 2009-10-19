@@ -5,7 +5,7 @@ my $RTEMS_SOURCES_URL, $RTEMS_BINUTILS_URL, $RTEMS_GCC_URL, $RTEMS_NEWLIB_URL;
 sub getParm {
     ($shellName) = @_;
     my $command, $val;
-    $command="grep '^$shellName=' getAndBuildTools.sh";
+    $command="grep '^$shellName=' $ENV{BUILD_SCRIPT}";
     $val=`$command`;
     $val =~ s/\${RTEMS_VERSION}/\\rtemsVersion/;
     $val =~ s/\${RTEMS_BASE_VERSION}/\\rtemsBaseVersion/;
@@ -15,14 +15,16 @@ sub getParm {
     return $val;
 }
 
-$RTEMS_SOURCES_URL = getParm("RTEMS_SOURCES_URL");
-$BINUTILS          = getParm("BINUTILS");
-$GCC               = getParm("GCC");
-$NEWLIB            = getParm("NEWLIB");
-$BINUTILSDIFF      = getParm("BINUTILSDIFF");
-$GCCDIFF           = getParm("GCCDIFF");
-$NEWLIBDIFF        = getParm("NEWLIBDIFF");
-$RTEMS_VERSION     = getParm("RTEMS_VERSION");
+die "You need to provide a BUILD_SCRIPT environment variable.  Terminating" if ($ENV{BUILD_SCRIPT} eq '');
+$RTEMS_SOURCES_URL  = getParm("RTEMS_SOURCES_URL");
+$BINUTILS           = getParm("BINUTILS");
+$GCC                = getParm("GCC");
+$NEWLIB             = getParm("NEWLIB");
+$BINUTILSDIFF       = getParm("BINUTILSDIFF");
+$GCCDIFF            = getParm("GCCDIFF");
+$NEWLIBDIFF         = getParm("NEWLIBDIFF");
+$RTEMS_VERSION      = getParm("RTEMS_VERSION");
+$RTEMS_BASE_VERSION = getParm("RTEMS_BASE_VERSION");
 
 
 print "\\newcommand{\\RTEMSSOURCEURL}{$RTEMS_SOURCES_URL}\n";

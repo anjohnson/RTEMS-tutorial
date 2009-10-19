@@ -19,6 +19,9 @@ install: html pdf
 	tar cfj ~/tutorial.tar.bz2 tutorial
 	echo "Please unpack $(HOME)/tutorial.tar.bz2 in $(WEB_BASE)   (web server)"
 
+versions.tex:
+	perl makeDoc.pl >versions.tex
+
 clean:
 	rm -f *.dvi *.log *.aux *.bbl *.blg *.lof *.lot *.toc *.out *.zip
 
