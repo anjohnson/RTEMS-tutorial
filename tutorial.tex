@@ -834,6 +834,7 @@ application tree, beginning at the \verb@<top>@ directory to the TFTP/NFS server
 \end{enumerate}
 
 \subsubsection{Motorola Processors Using MOTLOAD}
+\label{MOTLOAD}
 The following `Global Environment Variables' are used.  These are set using
 the MOTLOAD {\tt gevEdit} command.
 \begin{description}
@@ -987,8 +988,10 @@ CST6CDT5,M3.2.0,M11.1.0 is appropriate for Chicago in 2007 and perhaps subsequen
 
 \end{description}
 
+The uCDIMM ColdFire 5282 module is distributed with two types of bootstrap ROMs.  One type provides a TFTP server and the other provides a TFTP client.
+The steps required to boot an EPICS application differ depending on the the bootstrap type.
 
-
+\paragraph{Arcturus uCDIMM ColdFire 5282 with boostrap ROMs providing TFTP server}
 Use the bootstrap {\tt tftp} command to load the IOC application image
 (which may include a tar image of the in-memory filesystem contents in which case the CMDLINE will likely look something like {\tt /st.cmd} and the NFSMOUNT need not be present).
 You'll need to run a TFTP client on your host machine to transfer the
@@ -1003,6 +1006,9 @@ Use the bootstrap {\tt goram} command to start the application or the
 the latter case you may want to also use the {\tt setenv} command to set the
 {\tt AUTOBOOT} environment variable.
 
+\paragraph{Arcturus uCDIMM ColdFire 5282 with boostrap ROMs providing TFTP client}
+The bootstrap procedure in this case is similar to that for the Motorola VME processors in section~\ref{MOTLOAD}.
+
 The cexp package can be used to
 incrementally load your application components.
 
@@ -1014,10 +1020,11 @@ If you're feeling brave you can turn loose the following script.  It attempts
 to download, unpack, configure, build and install the GNU cross-development
 tools and libraries for one or more target architectures.  To use
 the script, set the \verb@ARCHS@ 
-environment variable to the architectures you wish to support, then 
-\begin{verbatim}
-sh getAndBuildTools.sh
-\end{verbatim}
-\verbatimfile{getAndBuildTools.sh}
+environment variable to the architectures you wish to support, then run
+the script.
+\section{getAndBuildTools-4.9.2.sh}
+\verbatimfile{getAndBuildTools-4.9.2.sh}
+\section{getAndBuildTools-4.10.sh}
+\verbatimfile{getAndBuildTools-4.10.sh}
 
 \end{document}

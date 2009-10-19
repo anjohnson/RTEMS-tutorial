@@ -8,19 +8,19 @@
 # Specify the architectures for which the tools are to be built
 # To build for single target: ARCHS="m68k"
 #
-ARCHS="${ARCHS:-m68k i386 powerpc}"
+ARCHS="${ARCHS:-i386 powerpc m68k}"
 
 #
 # Specify the versions
 #
-GCC=4.3.3
-BINUTILS=2.19
+GCC=4.4.2
+BINUTILS=2.20
 NEWLIB=1.17.0
-GDB=6.8
-BINUTILSDIFF=binutils-2.19.1-rtems4.10-20090203.diff
-GCCDIFF=gcc-core-4.3.3-rtems4.10-20090125.diff
-NEWLIBDIFF=newlib-1.17.0-rtems4.10-20090203.diff
-GDBDIFF=gdb-6.8-rtems4.10-20080917.diff
+GDB=7.0
+#BINUTILSDIFF=binutils-2.19.1-rtems4.10-20090203.diff
+GCCDIFF=gcc-core-4.4.2-rtems4.10-20091015.diff
+NEWLIBDIFF=newlib-1.17.0-rtems4.10-20091009.diff
+GDBDIFF=gdb-7.0-rtems4.10-20091007.diff
 RTEMS_VERSION=4.10
 
 #
